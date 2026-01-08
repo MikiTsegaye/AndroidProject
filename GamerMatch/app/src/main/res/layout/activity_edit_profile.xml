@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_weight="0"
+        android:text="הגדרות חשבון ⚙️"
+        android:textSize="22sp" />
+
+    <EditText
+        android:id="@+id/etEditName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:drawableStart="@android:drawable/ic_menu_edit"
+        android:drawablePadding="10dp"
+        android:gravity="start"
+        android:hint="שם משתמש חדש"
+        android:inputType="textPersonName"
+        android:textAlignment="viewStart" />
+
+    <Button
+        android:id="@+id/btnSaveProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="0"
+        android:backgroundTint="#4CAF50"
+        android:text="עדכן שם ✨" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/etGameName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="הוסף משחק מועדף (למשל: FIFA, CS:GO)"
+        android:textAlignment="viewStart" />
+
+    <Button
+        android:id="@+id/btnAddGame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="הוסף לרשימה ➕"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#2196F3" />
+
+    <Button
+        android:id="@+id/btnBackToMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="חזרה למסך הראשי 🏠"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@android:color/darker_gray" />
+
+</LinearLayout>
