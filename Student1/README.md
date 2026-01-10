@@ -2,7 +2,7 @@
 
 This project provides the foundational architecture for the **GamerMatch** application. As **The Architect**, I have established the core engine for user authentication, data persistence, and player matchmaking, ensuring a stable environment for the next stages of development.
 
-## 🛠 Features Implemented (The Architect's Scope)
+## 🛠 Features Implemented (The First Student Scope)
 
 * **Firebase Core Setup**: Full integration with Firebase Authentication and Cloud Firestore for real-time data management.
 * **Minimalist User Model**: A high-performance `User` class containing essential data: `m_Name`, `m_Email`, `m_FavoriteGames`, and `m_FriendsList`.
