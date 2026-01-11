@@ -104,18 +104,62 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    //old function before check
+//    private void listenToMessages() {
+//        listener = db.collection("chats").document(chatId)
+//                .collection("messages")
+//                .orderBy("timestamp", Query.Direction.ASCENDING)
+//                .addSnapshotListener((snap, e) -> {
+//                    if (e != null || snap == null) return;
+//                    List<Message> list = snap.toObjects(Message.class);
+//                    adapter.setMessages(list);
+//                    if (list != null && !list.isEmpty()) {
+//                        rvMessages.scrollToPosition(list.size() - 1);
+//                    }
+//                });
+//    }
+
     private void listenToMessages() {
+        adapter.clearAll();
+
         listener = db.collection("chats").document(chatId)
                 .collection("messages")
                 .orderBy("timestamp", Query.Direction.ASCENDING)
                 .addSnapshotListener((snap, e) -> {
                     if (e != null || snap == null) return;
-                    List<Message> list = snap.toObjects(Message.class);
-                    adapter.setMessages(list);
-                    if (list != null && !list.isEmpty()) {
-                        rvMessages.scrollToPosition(list.size() - 1);
+
+                    boolean wasAtBottom = isAtBottom();
+                    boolean anyInserted = false;
+
+                    for (com.google.firebase.firestore.DocumentChange dc : snap.getDocumentChanges()) {
+                        if (dc.getType() == com.google.firebase.firestore.DocumentChange.Type.ADDED) {
+                            String docId = dc.getDocument().getId();
+                            Message m = dc.getDocument().toObject(Message.class);
+
+                            boolean inserted = adapter.addMessageIfNew(docId, m);
+                            anyInserted = anyInserted || inserted;
+                        }
+                    }
+
+                    // Scroll once at the end (only if the user was at the bottom)
+                    if (anyInserted && wasAtBottom) {
+                        rvMessages.scrollToPosition(adapter.getItemCount() - 1);
                     }
                 });
+    }
+
+    private boolean isAtBottom() {
+        RecyclerView.LayoutManager lm = rvMessages.getLayoutManager();
+        if (!(lm instanceof LinearLayoutManager)) return true;
+
+        LinearLayoutManager llm = (LinearLayoutManager) lm;
+        int lastVisible = llm.findLastVisibleItemPosition(); // לא completely
+        int total = adapter.getItemCount();
+
+        if (total == 0) return true;
+
+        // If I am within 1-2 messages of the end, I am considered "at the bottom"
+        return lastVisible >= total - 2;
     }
 
     private void sendMessage(String text) {

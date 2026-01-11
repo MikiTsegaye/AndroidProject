@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,9 +47,16 @@ public class InboxActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUid = FirebaseAuth.getInstance().getUid();
 
+        //לשנות לחלק למטה אחרי שיש את האופציה פילטור של מי לבחור לשיחה
         findViewById(R.id.btnNewChat).setOnClickListener(v -> {
             showCreateChatDialog();
         });
+
+        //לשנות לזה אחרי שיש את החלק של הבחירה עם מי להתחיל את הצט
+//        findViewById(R.id.btnNewChat).setOnClickListener(v -> {
+//            Intent i = new Intent(this, FeedActivity.class); // או HomeActivity של חניך 2
+//            startActivity(i);
+//        });
 
         if (currentUid == null) {
             tvEmpty.setText("Not logged in");
@@ -66,6 +74,9 @@ public class InboxActivity extends AppCompatActivity {
 
         rvChats.setLayoutManager(new LinearLayoutManager(this));
         rvChats.setAdapter(adapter);
+
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        rvChats.addItemDecoration(divider);
 
         listenToChats();
     }

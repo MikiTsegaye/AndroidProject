@@ -63,4 +63,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.VH> {
             tvText = itemView.findViewById(R.id.tvText);
         }
     }
+
+    private final java.util.Set<String> seenIds = new java.util.HashSet<>();
+
+    public void clearAll() {
+        messages.clear();
+        seenIds.clear();
+        notifyDataSetChanged();
+    }
+
+    public boolean addMessageIfNew(String id, Message m) {
+        if (id == null || m == null) return false;
+        if (seenIds.contains(id)) return false;
+
+        seenIds.add(id);
+        messages.add(m);
+        notifyItemInserted(messages.size() - 1);
+        return true;
+    }
 }
