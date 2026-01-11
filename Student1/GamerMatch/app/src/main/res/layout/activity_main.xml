@@ -22,4 +22,10 @@
         android:backgroundTint="#4CAF50"
         android:text="Edit My Profile" />
 
+    <Button
+        android:id="@+id/btnGoToChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go to Chat" />
+
 </LinearLayout>

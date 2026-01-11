@@ -22,12 +22,14 @@ public class MainActivity extends AppCompatActivity
         m_Auth = FirebaseAuth.getInstance();
         m_BtnEditProfile = findViewById(R.id.btnGoToEditProfile);
 
-
-
         m_BtnEditProfile.setOnClickListener(v ->
         {
             Intent intent = new Intent(this, EditProfileActivity.class);
             startActivity(intent);
+        });
+
+        findViewById(R.id.btnGoToChat).setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, com.example.gamermatch.chat.InboxActivity.class));
         });
     }
 }

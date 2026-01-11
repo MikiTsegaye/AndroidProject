@@ -12,6 +12,12 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.GamerMatch">
         <activity
+            android:name=".chat.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chat.InboxActivity"
+            android:exported="true" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -20,8 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".EditProfileActivity" />
     </application>
 
