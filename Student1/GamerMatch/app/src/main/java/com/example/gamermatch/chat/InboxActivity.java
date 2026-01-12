@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,22 +42,23 @@ public class InboxActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
 
+        // Toolbar + Back arrow
+        Toolbar toolbar = findViewById(R.id.toolbarInbox);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Back arrow
+            getSupportActionBar().setTitle("Chats");
+        }
+        toolbar.setNavigationOnClickListener(v -> finish());
+
+        //Views
         rvChats = findViewById(R.id.rvChats);
         tvEmpty = findViewById(R.id.tvEmpty);
 
+        //Firebase
         db = FirebaseFirestore.getInstance();
         currentUid = FirebaseAuth.getInstance().getUid();
-
-        //לשנות לחלק למטה אחרי שיש את האופציה פילטור של מי לבחור לשיחה
-        findViewById(R.id.btnNewChat).setOnClickListener(v -> {
-            showCreateChatDialog();
-        });
-
-        //לשנות לזה אחרי שיש את החלק של הבחירה עם מי להתחיל את הצט
-//        findViewById(R.id.btnNewChat).setOnClickListener(v -> {
-//            Intent i = new Intent(this, FeedActivity.class); // או HomeActivity של חניך 2
-//            startActivity(i);
-//        });
 
         if (currentUid == null) {
             tvEmpty.setText("Not logged in");
@@ -65,6 +67,7 @@ public class InboxActivity extends AppCompatActivity {
             return;
         }
 
+        // RecyclerView + Adapter
         adapter = new InboxAdapter(currentUid, (chatId, otherUid) -> {
             Intent i = new Intent(this, ChatActivity.class);
             i.putExtra("chatId", chatId);
@@ -75,9 +78,11 @@ public class InboxActivity extends AppCompatActivity {
         rvChats.setLayoutManager(new LinearLayoutManager(this));
         rvChats.setAdapter(adapter);
 
+        // Divider between chats
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         rvChats.addItemDecoration(divider);
 
+        // Listen to chats
         listenToChats();
     }
 
@@ -96,6 +101,22 @@ public class InboxActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_inbox, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        if (item.getItemId() == R.id.action_new_chat) {
+            // במקום Dialog של UID - בעתיד זה יפתח "Find Players" (סטודנט 2)
+            showCreateChatDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void createChatAndOpen(String otherUid) {
