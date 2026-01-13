@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity
 
         m_Auth = FirebaseAuth.getInstance();
         m_BtnEditProfile = findViewById(R.id.btnGoToEditProfile);
+        m_BtnSearch = findViewById(R.id.btnGoToSearch);
 
         m_BtnEditProfile.setOnClickListener(v ->
         {
