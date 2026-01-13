@@ -26,6 +26,14 @@ public class LoginActivity extends AppCompatActivity
 
         m_Auth = FirebaseAuth.getInstance();
 
+//        //if the user already connenct to upp
+//        if (m_Auth.getCurrentUser() != null) {
+//            startActivity(new Intent(this, com.example.gamermatch.chat.InboxActivity.class));
+//            finish();
+//            return;
+//        }
+
+
         m_EtEmail = findViewById(R.id.etLoginEmail);
         m_EtPassword = findViewById(R.id.etLoginPassword);
         m_BtnLogin = findViewById(R.id.btnLogin);
@@ -71,6 +79,10 @@ public class LoginActivity extends AppCompatActivity
                     {
                         Toast.makeText(this, "Welcome Back!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                        //just for check and then delete?
+                        Intent i = new Intent(LoginActivity.this, com.example.gamermatch.chat.InboxActivity.class);
+
                         startActivity(intent);
                         finish();
                     }
