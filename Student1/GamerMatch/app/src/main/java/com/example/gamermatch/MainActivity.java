@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.gamermatch.search.SearchActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity
@@ -12,6 +14,7 @@ public class MainActivity extends AppCompatActivity
     private TextView m_TvYourId;
     private Button m_BtnEditProfile;
     private FirebaseAuth m_Auth;
+    private Button m_BtnSearch;
 
     @Override
     protected void onCreate(Bundle i_SavedInstanceState)
@@ -30,6 +33,12 @@ public class MainActivity extends AppCompatActivity
 
         findViewById(R.id.btnGoToChat).setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, com.example.gamermatch.chat.InboxActivity.class));
+        });
+
+        m_BtnSearch.setOnClickListener(v ->
+        {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
         });
     }
 }
