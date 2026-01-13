@@ -60,4 +60,16 @@ public class FireBaseHelper
                     .update("m_FavoriteGames", FieldValue.arrayUnion(i_GameName));
         }
     }
+
+
+    public void AddFriend(String i_Friend)//adding a new friend
+    {
+        String v_Uid = GetCurrentUserId();
+        if (v_Uid != null)
+        {
+            m_DataBase.collection("users").document(v_Uid)
+                    .update("m_FriendList",FieldValue.arrayUnion(i_Friend));
+        }
+
+    }
 }
