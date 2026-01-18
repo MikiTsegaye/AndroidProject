@@ -60,12 +60,22 @@ public class ChatActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        String otherName = getIntent().getStringExtra("otherName");
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             // זמני עד שמביאים שם אמיתי
-            getSupportActionBar().setTitle(otherUid);
+            if (otherName != null) {
+                getSupportActionBar().setTitle(otherName);
+            }
+            else{
+                getSupportActionBar().setTitle(otherUid);
+            }
+
+
         }
         toolbar.setNavigationOnClickListener(v -> finish());
+
 
         // Fetch display name (optional)
         db.collection("users")
@@ -73,7 +83,7 @@ public class ChatActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(doc -> {
                     if (doc.exists()) {
-                        String name = doc.getString("displayName");
+                        String name = doc.getString("name");
                         if (name != null && getSupportActionBar() != null) {
                             getSupportActionBar().setTitle(name);
                         }

@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gamermatch.search.MyFriendsActivity;
 import com.example.gamermatch.search.SearchActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity
         m_Auth = FirebaseAuth.getInstance();
         m_BtnEditProfile = findViewById(R.id.btnGoToEditProfile);
         m_BtnSearch = findViewById(R.id.btnGoToSearch);
+        Button btnMyFriends = findViewById(R.id.btnMyFriends);
+
 
         m_BtnEditProfile.setOnClickListener(v ->
         {
@@ -39,6 +42,14 @@ public class MainActivity extends AppCompatActivity
         m_BtnSearch.setOnClickListener(v ->
         {
             Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+        });
+
+
+        // בתוך MainActivity.java
+
+        btnMyFriends.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, MyFriendsActivity.class);
             startActivity(intent);
         });
     }

@@ -55,15 +55,35 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ChatVH> {
                 }
             }
         }
+        if (otherUid != null) {
+            // 2. במקום להציג את ה-ID, נמשוך את השם מ-Firestore
+            String finalOtherUid = otherUid;
+            com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(otherUid)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // וודא ששם השדה כאן (name) זהה למה שיש לך ב-Firebase
+                            String name = documentSnapshot.getString("name");
+                            holder.tvTitle.setText(name != null ? name : finalOtherUid);
+                        } else {
+                            holder.tvTitle.setText(finalOtherUid);
+                        }
+                    });
+        } else {
+            holder.tvTitle.setText("Chat");
+        }
 
-        holder.tvTitle.setText(otherUid != null ? otherUid : "Chat");
+        // 3. הצגת ההודעה האחרונה
         holder.tvLast.setText(c.getLastMessage() != null ? c.getLastMessage() : "");
 
-        String finalOtherUid = otherUid;
+        // 4. לחיצה לפתיחת הצ'אט
+        String finalOtherUidForClick = otherUid;
         holder.itemView.setOnClickListener(v -> {
-            if (finalOtherUid != null) {
-                String chatId = ChatUtils.chatId(currentUid, finalOtherUid);
-                listener.onChatClick(chatId, finalOtherUid);
+            if (finalOtherUidForClick != null) {
+                String chatId = ChatUtils.chatId(currentUid, finalOtherUidForClick);
+                listener.onChatClick(chatId, finalOtherUidForClick);
             }
         });
     }
