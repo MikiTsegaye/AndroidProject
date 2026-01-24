@@ -1,75 +1,88 @@
 package com.example.gamermatch;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class FireBaseHelper
-{
-    private FirebaseAuth m_Auth = FirebaseAuth.getInstance();
-    private FirebaseFirestore m_DataBase = FirebaseFirestore.getInstance();
+public class FireBaseHelper {
 
-    public String GetCurrentUserId()
-    {
-        String v_UserId = null;
-        if (m_Auth.getCurrentUser() != null)
-        {
-            v_UserId = m_Auth.getCurrentUser().getUid();
-        }
-        return v_UserId;
+    private final FirebaseAuth m_Auth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore m_DataBase = FirebaseFirestore.getInstance();
+
+    public String GetCurrentUserId() {
+        return (m_Auth.getCurrentUser() != null) ? m_Auth.getCurrentUser().getUid() : null;
     }
 
-    public void RegisterNewUser(String i_Email, String i_Password, String i_Name)
-    {
+    public void RegisterNewUser(String i_Email, String i_Password, String i_Name) {
         m_Auth.createUserWithEmailAndPassword(i_Email, i_Password)
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        String v_UserId = m_Auth.getCurrentUser().getUid();
+                    if (task.isSuccessful()) {
+                        String v_UserId = GetCurrentUserId();
+                        if (v_UserId == null) return;
 
-                        User newUser = new User(v_UserId, i_Name, i_Email);
-
-                        m_DataBase.collection("users").document(v_UserId).set(newUser);
+                        // שומרים שדות אחידים, בלי m_
+                        m_DataBase.collection("users").document(v_UserId).set(
+                                new java.util.HashMap<String, Object>() {{
+                                    put("userId", v_UserId);      // אופציונלי
+                                    put("name", i_Name);
+                                    put("email", i_Email);
+                                    put("favoriteGames", new java.util.ArrayList<>());
+                                    put("friends", new java.util.ArrayList<>());
+                                }}
+                        );
                     }
                 });
     }
 
-    public Query SearchPlayersByGame(String i_GameName)
-    {
+    // 🔎 חיפוש שחקנים לפי משחק: מחפש בתוך favoriteGames
+    public Query SearchPlayersByGame(String i_GameName) {
         return m_DataBase.collection("users")
-                .whereArrayContains("m_FavoriteGames", i_GameName);
+                .whereArrayContains("favoriteGames", i_GameName);
     }
 
-    public void UpdateName(String i_NewName)
-    {
+    // ✏️ עדכון שם: מעדכן name
+    public void UpdateName(String i_NewName) {
         String v_Uid = GetCurrentUserId();
-        if (v_Uid != null)
-        {
+        if (v_Uid != null) {
             m_DataBase.collection("users").document(v_Uid)
-                    .update("m_Name", i_NewName);
+                    .update("name", i_NewName);
         }
     }
 
-    public void AddFavoriteGame(String i_GameName)
-    {
+    // 🎮 הוספת משחק
+    public void AddFavoriteGame(String i_GameName) {
         String v_Uid = GetCurrentUserId();
-        if (v_Uid != null)
-        {
+        if (v_Uid != null) {
             m_DataBase.collection("users").document(v_Uid)
-                    .update("m_FavoriteGames", FieldValue.arrayUnion(i_GameName));
+                    .update("favoriteGames", FieldValue.arrayUnion(i_GameName));
         }
     }
 
-
-    public void AddFriend(String i_Friend)//adding a new friend
-    {
+    // 🎮 הסרת משחק (צריך בשביל checkbox)
+    public void RemoveFavoriteGame(String i_GameName) {
         String v_Uid = GetCurrentUserId();
-        if (v_Uid != null)
-        {
+        if (v_Uid != null) {
             m_DataBase.collection("users").document(v_Uid)
-                    .update("m_FriendList",FieldValue.arrayUnion(i_Friend));
+                    .update("favoriteGames", FieldValue.arrayRemove(i_GameName));
         }
+    }
 
+    // 👥 הוספת חבר
+    public void AddFriend(String i_FriendUid) {
+        String v_Uid = GetCurrentUserId();
+        if (v_Uid != null) {
+            m_DataBase.collection("users").document(v_Uid)
+                    .update("friends", FieldValue.arrayUnion(i_FriendUid));
+        }
+    }
+
+    // 👥 הסרת חבר (מומלץ)
+    public void RemoveFriend(String i_FriendUid) {
+        String v_Uid = GetCurrentUserId();
+        if (v_Uid != null) {
+            m_DataBase.collection("users").document(v_Uid)
+                    .update("friends", FieldValue.arrayRemove(i_FriendUid));
+        }
     }
 }

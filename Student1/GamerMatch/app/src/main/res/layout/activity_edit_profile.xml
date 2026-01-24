@@ -7,18 +7,18 @@
     android:gravity="center_horizontal">
 
     <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:layout_weight="0"
+        android:layout_marginBottom="24dp"
         android:text="הגדרות חשבון ⚙️"
         android:textSize="22sp" />
 
+    <!-- Update name -->
     <EditText
         android:id="@+id/etEditName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
         android:drawableStart="@android:drawable/ic_menu_edit"
         android:drawablePadding="10dp"
         android:gravity="start"
@@ -31,38 +31,55 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_weight="0"
         android:backgroundTint="#4CAF50"
         android:text="עדכן שם ✨" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/darker_gray" />
 
-    <EditText
-        android:id="@+id/etGameName"
+    <!-- Games section -->
+    <TextView
+        android:id="@+id/tvGamesTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="הוסף משחק מועדף (למשל: FIFA, CS:GO)"
-        android:textAlignment="viewStart" />
+        android:text="בחרי משחקים מועדפים:"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
 
-    <Button
-        android:id="@+id/btnAddGame"
+    <TextView
+        android:id="@+id/tvGamesHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="הוסף לרשימה ➕"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="#2196F3" />
+        android:text="סמני כדי להוסיף / בטלי סימון כדי להסיר"
+        android:textSize="13sp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/tvNoGames"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="אין משחקים להצגה כרגע"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGames"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never"/>
 
     <Button
         android:id="@+id/btnBackToMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="חזרה למסך הראשי 🏠"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@android:color/darker_gray" />
 
 </LinearLayout>

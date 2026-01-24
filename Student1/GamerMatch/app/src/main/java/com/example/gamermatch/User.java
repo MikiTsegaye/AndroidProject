@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {private String userId;
-    private String m_Name;
-    private String m_Email;
+    private String name;
+    private String email;
     private List<String> m_FavoriteGames;
     private List<String> m_FriendsList;
 
@@ -17,8 +17,8 @@ public class User {private String userId;
 
     public User(String i_UserId, String i_Name, String i_Email) {
         this.userId = i_UserId;
-        this.m_Name = i_Name;
-        this.m_Email = i_Email;
+        this.name = i_Name;
+        this.email = i_Email;
         this.m_FavoriteGames = new ArrayList<>();
         this.m_FriendsList = new ArrayList<>();
     }
@@ -30,14 +30,14 @@ public class User {private String userId;
     public void setUserId(String userId) { this.userId = userId; }
 
     @PropertyName("name")
-    public String getName() { return m_Name; }
+    public String getName() { return name; }
 
     @PropertyName("name")
-    public void setName(String name) { this.m_Name = name; }
+    public void setName(String name) { this.name = name; }
     @PropertyName("email")
-    public void setEmail(String email) { this.m_Email = email; }
+    public void setEmail(String email) { this.email = email; }
     @PropertyName("email")
-    public String getEmail() { return m_Email; }
+    public String getEmail() { return email; }
     @PropertyName("favoriteGames")
     public List<String> getFavoriteGames() { return m_FavoriteGames; }
     @PropertyName("favoriteGames")

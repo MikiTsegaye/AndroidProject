@@ -14,15 +14,21 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="16dp" />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/svPlayerSearch"
+    <!-- Dropdown games -->
+    <Spinner
+        android:id="@+id/spGames"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        app:queryHint="חפש לפי שם משחק (למשל: FIFA)"
-        app:iconifiedByDefault="false"
+        android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:id="@+id/tvSelectedGame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="14sp"
         android:layout_marginBottom="16dp" />
 
     <TextView
