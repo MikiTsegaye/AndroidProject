@@ -47,8 +47,12 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
         User user = m_PlayerList.get(position);
         Context context = holder.itemView.getContext();
 
-        // (כאן שאר הקוד שלך שמציג את השם, גיל וכו'...)
-        // holder.tvName.setText(user.getName());
+        if (user.getName() != null) {
+            holder.m_TvName.setText(user.getName());
+        } else {
+            holder.m_TvName.setText("Unknown");
+        }
+       // holder.m_TvGames.setText(user.getFavoriteGames());
 
         // בתוך onBindViewHolder
         holder.m_BtnAddFriend.setOnClickListener(v -> {
