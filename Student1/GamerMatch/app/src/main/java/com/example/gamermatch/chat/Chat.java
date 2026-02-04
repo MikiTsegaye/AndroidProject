@@ -9,6 +9,11 @@ public class Chat {
     private String lastSenderId;
     private Timestamp lastTimestamp;
 
+    // NEW:
+    private String type;      // "dm" / "game_group"
+    private String gameName;  // "FIFA"
+    private String gameKey;   // "fifa"
+
     // Must for Firestore
     public Chat() {}
 
@@ -34,4 +39,8 @@ public class Chat {
     public Timestamp getLastTimestamp() {
         return lastTimestamp;
     }
+
+    public String getType() { return type; }
+    public String getGameName() { return gameName; }
+    public String getGameKey() { return gameKey; }
 }

@@ -3,7 +3,6 @@ package com.example.gamermatch.chat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -21,7 +20,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,16 +45,16 @@ public class InboxActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Back arrow
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Chats");
         }
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        //Views
+        // Views
         rvChats = findViewById(R.id.rvChats);
         tvEmpty = findViewById(R.id.tvEmpty);
 
-        //Firebase
+        // Firebase
         db = FirebaseFirestore.getInstance();
         currentUid = FirebaseAuth.getInstance().getUid();
 
@@ -67,40 +65,27 @@ public class InboxActivity extends AppCompatActivity {
             return;
         }
 
-        // RecyclerView + Adapter
-        adapter = new InboxAdapter(currentUid, (chatId, otherUid) -> {
+        // Adapter
+        adapter = new InboxAdapter(currentUid, (chatId, isGroup, title, otherUid) -> {
             Intent i = new Intent(this, ChatActivity.class);
             i.putExtra("chatId", chatId);
-            i.putExtra("otherUid", otherUid);
+            i.putExtra("isGroup", isGroup);
+            if (isGroup) {
+                i.putExtra("chatTitle", title);
+            } else {
+                i.putExtra("otherUid", otherUid);
+            }
             startActivity(i);
         });
+
 
         rvChats.setLayoutManager(new LinearLayoutManager(this));
         rvChats.setAdapter(adapter);
 
-        // Divider between chats
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         rvChats.addItemDecoration(divider);
 
-        // Listen to chats
         listenToChats();
-    }
-
-    private void showCreateChatDialog() {
-        EditText input = new EditText(this);
-        input.setHint("Enter other user UID");
-
-        new AlertDialog.Builder(this)
-                .setTitle("Create new chat")
-                .setView(input)
-                .setPositiveButton("Create", (d, which) -> {
-                    String otherUid = input.getText().toString().trim();
-                    if (otherUid.isEmpty() || otherUid.equals(currentUid)) return;
-
-                    createChatAndOpen(otherUid);
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
     }
 
     @Override
@@ -112,30 +97,67 @@ public class InboxActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         if (item.getItemId() == R.id.action_new_chat) {
-            // במקום Dialog של UID - בעתיד זה יפתח "Find Players" (סטודנט 2)
-            showCreateChatDialog();
+            showJoinGameGroupDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void createChatAndOpen(String otherUid) {
-        String chatId = currentUid.compareTo(otherUid) < 0
-                ? currentUid + "_" + otherUid
-                : otherUid + "_" + currentUid;
+    private void showJoinGameGroupDialog() {
+        db.collection("users").document(currentUid).get()
+                .addOnSuccessListener(doc -> {
+                    if (!doc.exists()) return;
 
-        Map<String, Object> chat = new HashMap<>();
-        chat.put("participants", Arrays.asList(currentUid, otherUid));
-        chat.put("lastMessage", "");
-        chat.put("lastTimestamp", FieldValue.serverTimestamp());
+                    @SuppressWarnings("unchecked")
+                    List<String> games = (List<String>) doc.get("favoriteGames");
 
-        db.collection("chats").document(chatId).set(chat)
-                .addOnSuccessListener(v -> {
-                    Intent i = new Intent(this, ChatActivity.class);
-                    i.putExtra("chatId", chatId);
-                    i.putExtra("otherUid", otherUid);
-                    startActivity(i);
+                    if (games == null || games.isEmpty()) {
+                        new AlertDialog.Builder(this)
+                                .setTitle("אין משחקים")
+                                .setMessage("קודם תבחרי משחקים בפרופיל כדי להצטרף לקבוצה.")
+                                .setPositiveButton("סבבה", null)
+                                .show();
+                        return;
+                    }
+
+                    String[] arr = games.toArray(new String[0]);
+
+                    new AlertDialog.Builder(this)
+                            .setTitle("הצטרפות לקבוצת משחק")
+                            .setItems(arr, (d, which) -> joinGameGroupAndOpen(arr[which]))
+                            .setNegativeButton("ביטול", null)
+                            .show();
                 });
+    }
+
+    private void joinGameGroupAndOpen(String gameName) {
+        String key = normalizeGameKey(gameName); // fifa / csgo
+        String chatId = "game_" + key;
+
+        Map<String, Object> init = new HashMap<>();
+        init.put("type", "game_group");
+        init.put("gameKey", key);
+        init.put("gameName", gameName);
+        init.put("lastMessage", "");
+        init.put("lastTimestamp", FieldValue.serverTimestamp());
+
+        db.collection("chats").document(chatId)
+                .set(init, com.google.firebase.firestore.SetOptions.merge())
+                .addOnSuccessListener(v -> db.collection("chats").document(chatId)
+                        .update("participants", FieldValue.arrayUnion(currentUid))
+                        .addOnSuccessListener(v2 -> openGroupChat(chatId, gameName)));
+    }
+
+    private void openGroupChat(String chatId, String gameName) {
+        Intent i = new Intent(this, ChatActivity.class);
+        i.putExtra("chatId", chatId);
+        i.putExtra("isGroup", true);
+        i.putExtra("chatTitle", gameName);
+        startActivity(i);
+    }
+
+    private String normalizeGameKey(String gameName) {
+        return gameName.toLowerCase().replaceAll("[^a-z0-9]", "");
     }
 
     private void listenToChats() {

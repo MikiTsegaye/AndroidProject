@@ -10,24 +10,27 @@
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
         android:text="Welcome to Gamer Match!"
-        android:textSize="20sp"
-        android:layout_marginBottom="16dp" />
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
 
     <Button
         android:id="@+id/btnGoToEditProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#4CAF50"
-        android:text="Edit My Profile" />
+        android:backgroundTint="#2196F3"
+        android:text="My Profile" />
 
 
     <Button
         android:id="@+id/btnGoToChat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Go to Chat" />
+        android:backgroundTint="#2196F3"
+        android:text="Chat" />
 
     <Button
         android:id="@+id/btnGoToSearch"
@@ -41,6 +44,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="My Friends"
-        android:backgroundTint="#4CAF50" />
+        android:backgroundTint="#2196F3" />
 
 </LinearLayout>

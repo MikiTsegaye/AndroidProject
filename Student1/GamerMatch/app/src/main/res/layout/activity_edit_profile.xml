@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:backgroundTint="#4CAF50"
+        android:backgroundTint="#2196F3"
         android:text="עדכן שם ✨" />
 
     <View
@@ -46,7 +46,7 @@
         android:id="@+id/tvGamesTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="בחרי משחקים מועדפים:"
+        android:text="בחר משחקים מועדפים:"
         android:textSize="16sp"
         android:layout_marginBottom="8dp" />
 
@@ -54,7 +54,7 @@
         android:id="@+id/tvGamesHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="סמני כדי להוסיף / בטלי סימון כדי להסיר"
+        android:text="סמן כדי להוסיף / בטלי סימון כדי להסיר"
         android:textSize="13sp"
         android:layout_marginBottom="10dp"
         android:textColor="@android:color/darker_gray"/>

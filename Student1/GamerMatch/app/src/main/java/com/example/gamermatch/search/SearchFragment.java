@@ -69,7 +69,7 @@ public class SearchFragment extends Fragment {
     private void setupGamesSpinner() {
         // שורה ראשונה שתכריח לבחור
         m_AllGames.clear();
-        m_AllGames.add("בחרי משחק...");
+        m_AllGames.add("בחר משחק...");
 
         m_GamesSpinnerAdapter = new ArrayAdapter<>(
                 requireContext(),
@@ -84,7 +84,7 @@ public class SearchFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = m_AllGames.get(position);
 
-                if ("בחרי משחק...".equals(selected)) {
+                if ("בחר משחק...".equals(selected)) {
                     m_TvSelectedGame.setText("");
                     clearResults();
                     return;
@@ -109,7 +109,7 @@ public class SearchFragment extends Fragment {
                 .addOnSuccessListener(snap -> {
                     // נשאיר את "בחרי משחק..." במקום 0
                     m_AllGames.clear();
-                    m_AllGames.add("בחרי משחק...");
+                    m_AllGames.add("בחר משחק...");
 
                     for (DocumentSnapshot doc : snap.getDocuments()) {
                         String name = doc.getString("name");

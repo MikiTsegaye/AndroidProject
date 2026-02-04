@@ -1,7 +1,6 @@
 package com.example.gamermatch.chat;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -19,7 +18,6 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
@@ -32,8 +30,11 @@ public class ChatActivity extends AppCompatActivity {
     private ListenerRegistration listener;
 
     private String chatId;
-    private String otherUid;
+    private String otherUid;   // רק ב-DM
     private String currentUid;
+
+    private boolean isGroup;
+    private String chatTitle;
 
     private MessageAdapter adapter;
 
@@ -46,12 +47,19 @@ public class ChatActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUid = FirebaseAuth.getInstance().getUid();
 
-        // Get intent extras
+        // Intent extras
         chatId = getIntent().getStringExtra("chatId");
-        otherUid = getIntent().getStringExtra("otherUid");
+        otherUid = getIntent().getStringExtra("otherUid"); // יכול להיות null בקבוצה
+        isGroup = getIntent().getBooleanExtra("isGroup", false);
+        chatTitle = getIntent().getStringExtra("chatTitle");
 
         // Validate
-        if (currentUid == null || chatId == null || otherUid == null) {
+        if (currentUid == null || chatId == null) {
+            finish();
+            return;
+        }
+        // ב-DM חייב otherUid
+        if (!isGroup && (otherUid == null || otherUid.isEmpty())) {
             finish();
             return;
         }
@@ -60,35 +68,32 @@ public class ChatActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String otherName = getIntent().getStringExtra("otherName");
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            // זמני עד שמביאים שם אמיתי
-            if (otherName != null) {
-                getSupportActionBar().setTitle(otherName);
-            }
-            else{
-                getSupportActionBar().setTitle(otherUid);
-            }
 
-
+            if (isGroup) {
+                getSupportActionBar().setTitle(chatTitle != null ? chatTitle : "Game Group");
+            } else {
+                String otherName = getIntent().getStringExtra("otherName");
+                getSupportActionBar().setTitle(otherName != null ? otherName : otherUid);
+            }
         }
         toolbar.setNavigationOnClickListener(v -> finish());
 
-
-        // Fetch display name (optional)
-        db.collection("users")
-                .document(otherUid)
-                .get()
-                .addOnSuccessListener(doc -> {
-                    if (doc.exists()) {
-                        String name = doc.getString("name");
-                        if (name != null && getSupportActionBar() != null) {
-                            getSupportActionBar().setTitle(name);
+        // Fetch display name (רק ב-DM)
+        if (!isGroup) {
+            db.collection("users")
+                    .document(otherUid)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        if (doc.exists()) {
+                            String name = doc.getString("name");
+                            if (name != null && getSupportActionBar() != null) {
+                                getSupportActionBar().setTitle(name);
+                            }
                         }
-                    }
-                });
+                    });
+        }
 
         // Views
         rvMessages = findViewById(R.id.rvMessages);
@@ -98,14 +103,14 @@ public class ChatActivity extends AppCompatActivity {
         // RecyclerView
         adapter = new MessageAdapter(currentUid);
         LinearLayoutManager lm = new LinearLayoutManager(this);
-        lm.setStackFromEnd(true); // להרגיש כמו וואטסאפ
+        lm.setStackFromEnd(true);
         rvMessages.setLayoutManager(lm);
         rvMessages.setAdapter(adapter);
 
         // Listen
         listenToMessages();
 
-        // Send button
+        // Send
         btnSend.setOnClickListener(v -> {
             String text = etMessage.getText().toString().trim();
             if (text.isEmpty()) return;
@@ -113,21 +118,6 @@ public class ChatActivity extends AppCompatActivity {
             etMessage.setText("");
         });
     }
-
-    //old function before check
-//    private void listenToMessages() {
-//        listener = db.collection("chats").document(chatId)
-//                .collection("messages")
-//                .orderBy("timestamp", Query.Direction.ASCENDING)
-//                .addSnapshotListener((snap, e) -> {
-//                    if (e != null || snap == null) return;
-//                    List<Message> list = snap.toObjects(Message.class);
-//                    adapter.setMessages(list);
-//                    if (list != null && !list.isEmpty()) {
-//                        rvMessages.scrollToPosition(list.size() - 1);
-//                    }
-//                });
-//    }
 
     private void listenToMessages() {
         adapter.clearAll();
@@ -151,7 +141,6 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Scroll once at the end (only if the user was at the bottom)
                     if (anyInserted && wasAtBottom) {
                         rvMessages.scrollToPosition(adapter.getItemCount() - 1);
                     }
@@ -163,32 +152,36 @@ public class ChatActivity extends AppCompatActivity {
         if (!(lm instanceof LinearLayoutManager)) return true;
 
         LinearLayoutManager llm = (LinearLayoutManager) lm;
-        int lastVisible = llm.findLastVisibleItemPosition(); // לא completely
+        int lastVisible = llm.findLastVisibleItemPosition();
         int total = adapter.getItemCount();
 
         if (total == 0) return true;
-
-        // If I am within 1-2 messages of the end, I am considered "at the bottom"
         return lastVisible >= total - 2;
     }
 
     private void sendMessage(String text) {
+        // message doc
         Map<String, Object> msg = new HashMap<>();
         msg.put("senderId", currentUid);
         msg.put("text", text);
         msg.put("timestamp", FieldValue.serverTimestamp());
 
-        // messages
         db.collection("chats").document(chatId)
                 .collection("messages")
                 .add(msg);
 
-        // Update conversation summary
+        // conversation summary update
         Map<String, Object> chatUpdate = new HashMap<>();
-        chatUpdate.put("participants", java.util.Arrays.asList(currentUid, otherUid));
         chatUpdate.put("lastMessage", text);
         chatUpdate.put("lastSenderId", currentUid);
         chatUpdate.put("lastTimestamp", FieldValue.serverTimestamp());
+
+        // חשוב: ב-DM אנחנו עדיין שומרים participants של 2 אנשים
+        // בקבוצה - לא נוגעים ב-participants כדי לא לדרוס!
+        if (!isGroup) {
+            chatUpdate.put("type", "dm");
+            chatUpdate.put("participants", java.util.Arrays.asList(currentUid, otherUid));
+        }
 
         db.collection("chats").document(chatId)
                 .set(chatUpdate, com.google.firebase.firestore.SetOptions.merge());

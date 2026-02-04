@@ -10,7 +10,7 @@
         android:id="@+id/toolbarInbox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="#2196F3"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         app:title="Chats"

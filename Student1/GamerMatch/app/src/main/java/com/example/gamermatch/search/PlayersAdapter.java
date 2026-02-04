@@ -52,32 +52,67 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
         } else {
             holder.m_TvName.setText("Unknown");
         }
-       // holder.m_TvGames.setText(user.getFavoriteGames());
+        // holder.m_TvGames.setText(user.getFavoriteGames());
 
         // בתוך onBindViewHolder
         holder.m_BtnAddFriend.setOnClickListener(v -> {
-            String currentUid = FirebaseAuth.getInstance().getUid();
-            String otherUid = user.getUserId();
+            String v_CurrentUid = FirebaseAuth.getInstance().getUid();
+            String v_OtherUid = user.getUserId();
 
-            if (currentUid == null || otherUid == null) return;
+            // בדיקת הגנה - מניעת הוספה של עצמי או נתונים ריקים
+            if (v_CurrentUid == null || v_OtherUid == null || v_CurrentUid.equals(v_OtherUid))
+            {
+                return;
+            }
 
             // פקודת הקסם של פיירבייס: arrayUnion
-            // זה מוסיף את החבר לרשימה רק אם הוא לא קיים שם כבר (מונע כפילויות)
             FirebaseFirestore.getInstance()
                     .collection("users")
-                    .document(currentUid)
-                    .update("friends", FieldValue.arrayUnion(otherUid))
+                    .document(v_CurrentUid)
+                    .update("friends", FieldValue.arrayUnion(v_OtherUid))
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(context, "Added to friends!", Toast.LENGTH_SHORT).show();
-                        // אופציונלי: להעלים את הכפתור או לשנות טקסט
+                        Toast.makeText(context, "Added to friends! 🎮", Toast.LENGTH_SHORT).show();
+
+                        // עדכון ויזואלי מיידי למשתמש
                         holder.m_BtnAddFriend.setEnabled(false);
                         holder.m_BtnAddFriend.setText("Saved");
+
+                        // אם קיים כפתור הסרה, נפעיל אותו כעת
+                        if (holder.m_BtnRemoveFriend != null)
+                        {
+                            holder.m_BtnRemoveFriend.setEnabled(true);
+                            holder.m_BtnRemoveFriend.setText("❌");
+                        }
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(context, "Error adding friend", Toast.LENGTH_SHORT).show();
                     });
         });
+        holder.m_BtnRemoveFriend.setOnClickListener(v -> {
+            String currentUid = FirebaseAuth.getInstance().getUid();
+            String otherUid = user.getUserId();
 
+            if (currentUid == null || otherUid == null) return;
+
+            // פקודת הקסם להסרה: arrayRemove
+            // זה מסיר את ה-ID מהמערך רק אם הוא קיים שם
+            FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(currentUid)
+                    .update("friends", FieldValue.arrayRemove(otherUid))
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(context, "Removed from friends! ", Toast.LENGTH_SHORT).show();
+
+                        // עדכון ויזואלי: מאפשרים להוסיף שוב או משנים את הטקסט
+                        holder.m_BtnRemoveFriend.setEnabled(false);
+                        holder.m_BtnRemoveFriend.setText("Removed");
+                        holder.m_BtnAddFriend.setEnabled(true);
+                        holder.m_BtnAddFriend.setText("➕");
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(context, "Error removing friend", Toast.LENGTH_SHORT).show();
+                    });
+        });
         // 2. עכשיו הכפתור יעבוד כי הוא מכיר את ה-user
         holder.m_BtnChat.setOnClickListener(v -> {
 
@@ -115,6 +150,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
         private TextView m_TvName;
         private TextView m_TvGames;
         private Button m_BtnAddFriend;
+        private Button m_BtnRemoveFriend;
         private Button m_BtnChat;
 
         public PlayerViewHolder(@NonNull View i_ItemView)
@@ -123,6 +159,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
             m_TvName = i_ItemView.findViewById(R.id.tvSearchPlayerName);
             m_TvGames = i_ItemView.findViewById(R.id.tvSearchPlayerGames);
             m_BtnAddFriend = i_ItemView.findViewById(R.id.btnAddFriend);
+            m_BtnRemoveFriend = i_ItemView.findViewById(R.id.btnRemoveFriend);
             m_BtnChat = i_ItemView.findViewById(R.id.btnChat);
         }
     }
