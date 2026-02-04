@@ -1,3 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- General -->
     <string name="app_name">Gamer Match</string>
+
+    <!-- Inbox / Chats -->
+    <string name="chats_title">Chats</string>
+    <string name="no_chats_yet">No chats yet</string>
+    <string name="not_logged_in">Not logged in</string>
+    <string name="join_game_group">Join game group</string>
+
+    <!-- Chat -->
+    <string name="type_message">Type a message</string>
+    <string name="send">Send</string>
+    <string name="game_group_default_title">Game Group</string>
+
+    <!-- activity_edit_profile -->
+    <string name="account_settings_title">Account Settings ⚙️</string>
+    <string name="new_username_hint">New username</string>
+    <string name="save_name">Update name ✨</string>
+    <string name="favorite_games_title">Choose favorite games:</string>
+    <string name="favorite_games_hint">Check to add / uncheck to remove</string>
+    <string name="no_games">No games available at the moment</string>
+    <string name="back_to_main">Back to main screen 🏠</string>
+
+    <!-- activity_login -->
+    <string name="login_title">Gamer Match Login</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">Login</string>
+    <string name="go_to_register">Don\'t have an account? Register here</string>
+
+    <!-- activity_main -->
+    <string name="welcome_title">Welcome to Gamer Match!</string>
+    <string name="edit_profile">My Profile</string>
+    <string name="chat">Chat</string>
+    <string name="search_players">Search Players</string>
+    <string name="my_friends">My Friends</string>
+
+    <!-- activity_my_friends -->
+    <string name="no_friends_yet">You haven\'t added any friends yet.</string>
+
+    <!-- activity_register -->
+    <string name="register_title">Gamer Match Register</string>
+    <string name="nickname_hint">Nickname</string>
+    <string name="register_button">Register</string>
+
+    <!-- fragment_search -->
+    <string name="search_players_title">Search Players 🔍</string>
+    <string name="no_players_found">No players found for this game... 👾</string>
+
+    <!-- item_chat_row -->
+    <string name="chat_default_title">Chat</string>
+    <string name="chat_last_message_placeholder">Last message...</string>
+
+    <!-- item_game_checkbox -->
+    <string name="game_default_label">Game</string>
+
+    <!-- item_player_card -->
+    <string name="player_name_placeholder">Player name 🎮</string>
+    <string name="player_games_prefix">Games:</string>
+    <string name="add_friend_symbol">➕</string>
+    <string name="message_button">Message</string>
+
 </resources>

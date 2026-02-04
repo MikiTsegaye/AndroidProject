@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="app_name">התאמת משחקים</string>
+
+    <!-- Inbox / Chats -->
+    <string name="chats_title">צ׳אטים</string>
+    <string name="no_chats_yet">אין צ׳אטים עדיין</string>
+    <string name="not_logged_in">לא מחובר/ת</string>
+    <string name="join_game_group">הצטרפות לקבוצת משחק</string>
+
+    <!-- Chat -->
+    <string name="type_message">כתוב/י הודעה…</string>
+    <string name="send">שלח</string>
+    <string name="game_group_default_title">קבוצת משחק</string>
+
+    <!-- activity_edit_profile -->
+    <string name="account_settings_title">הגדרות חשבון ⚙️</string>
+    <string name="new_username_hint">שם משתמש חדש</string>
+    <string name="save_name">עדכן שם ✨</string>
+    <string name="favorite_games_title">בחרי משחקים מועדפים:</string>
+    <string name="favorite_games_hint">סמני כדי להוסיף / בטלי סימון כדי להסיר</string>
+    <string name="no_games">אין משחקים להצגה כרגע</string>
+    <string name="back_to_main">חזרה למסך הראשי 🏠</string>
+
+    <!-- activity_login -->
+    <string name="login_title">התחברות ל־Gamer Match</string>
+    <string name="email_hint">אימייל</string>
+    <string name="password_hint">סיסמה</string>
+    <string name="login_button">התחבר</string>
+    <string name="go_to_register">אין לך חשבון? להרשמה לחצי כאן</string>
+
+    <!-- activity_main -->
+    <string name="welcome_title">ברוכים הבאים ל־Gamer Match!</string>
+    <string name="edit_profile">עריכת פרופיל</string>
+    <string name="chat">צ׳אט</string>
+    <string name="search_players">חיפוש שחקנים</string>
+    <string name="my_friends">החברים שלי</string>
+
+    <!-- activity_my_friends -->
+    <string name="no_friends_yet">עדיין לא הוספת חברים.</string>
+
+    <!-- activity_register -->
+    <string name="register_title">הרשמה ל־Gamer Match</string>
+    <string name="nickname_hint">כינוי</string>
+    <string name="register_button">הרשמה</string>
+
+    <!-- fragment_search -->
+    <string name="search_players_title">חיפוש שחקנים 🔍</string>
+    <string name="no_players_found">לא נמצאו שחקנים למשחק זה... 👾</string>
+
+    <!-- item_chat_row -->
+    <string name="chat_default_title">צ׳אט</string>
+    <string name="chat_last_message_placeholder">הודעה אחרונה...</string>
+
+    <!-- item_game_checkbox -->
+    <string name="game_default_label">משחק</string>
+
+    <!-- item_player_card -->
+    <string name="player_name_placeholder">שם השחקן 🎮</string>
+    <string name="player_games_prefix">משחקים:</string>
+    <string name="add_friend_symbol">➕</string>
+    <string name="message_button">הודעה</string>
+
+</resources>
