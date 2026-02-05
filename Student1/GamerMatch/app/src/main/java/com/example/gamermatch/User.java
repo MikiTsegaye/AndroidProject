@@ -5,7 +5,8 @@ import com.google.firebase.firestore.PropertyName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {private String userId;
+public class User {
+    private String userId;
     private String name;
     private String email;
     private List<String> m_FavoriteGames;

@@ -52,7 +52,13 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
         } else {
             holder.m_TvName.setText("Unknown");
         }
-        // holder.m_TvGames.setText(user.getFavoriteGames());
+        // אנחנו בודקים אם יש רשימה, ואם כן - מחברים אותה למשפט עם פסיקים
+        if (user.getFavoriteGames() != null && !user.getFavoriteGames().isEmpty()) {
+            String gamesString = android.text.TextUtils.join(", ", user.getFavoriteGames());
+            holder.m_TvGames.setText("Games: " + gamesString);
+        } else {
+            holder.m_TvGames.setText("Games: None");
+        }
 
         // בתוך onBindViewHolder
         holder.m_BtnAddFriend.setOnClickListener(v -> {
