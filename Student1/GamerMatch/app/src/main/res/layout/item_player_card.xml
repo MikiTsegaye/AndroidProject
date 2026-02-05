@@ -33,7 +33,7 @@
                 android:id="@+id/tvSearchPlayerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="שם השחקן 🎮"
+                android:text="@string/player_name_placeholder"
                 android:textAlignment="viewStart"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="משחקים: FIFA, Valorant"
+                android:text="@string/player_games_prefix"
                 android:textAlignment="viewStart"
                 android:textSize="14sp" />
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:backgroundTint="#2196F3"
-                android:text="Message"
+                android:text="@string/message_button"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -78,7 +78,7 @@
                     android:backgroundTint="#2196F3"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
-                    android:text="➕" />
+                    android:text="@string/add_friend_symbol" />
 
                 <Button
                     android:id="@+id/btnRemoveFriend"
@@ -88,7 +88,8 @@
                     android:backgroundTint="#2196F3"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
-                    android:text="❌" />
+                    android:text="@string/remove_friend_symbol" />
+
             </LinearLayout>
 
         </LinearLayout>

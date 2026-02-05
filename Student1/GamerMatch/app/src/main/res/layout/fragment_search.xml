@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="חיפוש שחקנים 🔍"
+        android:text="@string/search_players_title"
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
@@ -35,7 +35,7 @@
         android:id="@+id/tvNoResults"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="לא נמצאו שחקנים למשחק זה... 👾"
+        android:text="@string/no_players_found"
         android:textSize="18sp"
         android:gravity="center"
         android:layout_marginTop="50dp"

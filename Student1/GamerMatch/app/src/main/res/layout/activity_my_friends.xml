@@ -8,7 +8,7 @@
         android:id="@+id/tvNoFriends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="You haven't added any friends yet."
+        android:text="@string/no_friends_yet"
         android:visibility="gone"
         android:gravity="center"
         android:textSize="18sp" />

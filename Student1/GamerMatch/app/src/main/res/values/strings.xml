@@ -62,5 +62,6 @@
     <string name="player_games_prefix">Games:</string>
     <string name="add_friend_symbol">➕</string>
     <string name="message_button">Message</string>
+    <string name="remove_friend_symbol">❌</string>
 
 </resources>

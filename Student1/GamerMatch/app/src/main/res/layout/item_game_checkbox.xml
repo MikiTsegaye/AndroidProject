@@ -10,7 +10,7 @@
         android:id="@+id/cbGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Game"
+        android:text="@string/game_default_label"
         android:textSize="16sp"
 
         android:buttonTint="#2196F3"
