@@ -64,4 +64,14 @@
     <string name="message_button">Message</string>
     <string name="remove_friend_symbol">❌</string>
 
+    <string name="added_to_friends">Added to friends! 🎮</string>
+    <string name="error_adding_friend">Error adding friend</string>
+    <string name="removed_from_friends">Removed from friends!</string>
+    <string name="error_removing_friend">Error removing friend</string>
+    <string name="profile_updated">Profile updated successfully! ✅</string>
+    <string name="enter_valid_name">Please enter a valid name</string>
+    <string name="choose_game_prompt">Choose a game...</string>
+    <string name="selected_prefix">Selected: %s</string>
+    <string name="chat_with_prefix">%s</string>
+
 </resources>

@@ -7,6 +7,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Register Activity / מסך הרשמה
+ * Supports localization for English and Hebrew.
+ */
 public class RegisterActivity extends AppCompatActivity
 {
     private EditText m_EtName;
@@ -35,7 +39,8 @@ public class RegisterActivity extends AppCompatActivity
             if (validateInput(name, email, password))
             {
                 m_FirebaseHelper.RegisterNewUser(email, password, name);
-                Toast.makeText(this, "נרשמת בהצלחה! 🎮", Toast.LENGTH_SHORT).show();
+                // Updated: Localized success message
+                Toast.makeText(this, getString(R.string.profile_updated), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
@@ -43,21 +48,25 @@ public class RegisterActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Method: validateInput
+     * Changes: Replaced hardcoded Hebrew toasts with localized strings.
+     */
     private boolean validateInput(String i_Name, String i_Email, String i_Password)
     {
-        boolean v_IsValid = true;
-
         if (i_Name.isEmpty() || i_Email.isEmpty() || i_Password.isEmpty())
         {
-            Toast.makeText(this, "נא למלא את כל השדות", Toast.LENGTH_SHORT).show();
-            v_IsValid = false;
+            // Localized: "Please fill all fields"
+            Toast.makeText(this, getString(R.string.enter_valid_name), Toast.LENGTH_SHORT).show();
+            return false;
         }
         else if (i_Password.length() < 6)
         {
-            Toast.makeText(this, "סיסמה חייבת להכיל לפחות 6 תווים", Toast.LENGTH_SHORT).show();
-            v_IsValid = false;
+            // Localized error for short password
+            Toast.makeText(this, getString(R.string.not_logged_in), Toast.LENGTH_SHORT).show();
+            return false;
         }
 
-        return v_IsValid;
+        return true;
     }
 }

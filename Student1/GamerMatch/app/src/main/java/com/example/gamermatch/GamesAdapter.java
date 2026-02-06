@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Adapter for selecting favorite games via checkboxes / אדפטר לבחירת משחקים מועדפים דרך תיבות סימון
+ */
 public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.VH> {
 
     public interface OnToggleListener {
@@ -27,12 +30,18 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.VH> {
         m_Listener = listener;
     }
 
+    /**
+     * Updates the list of all available games / עדכון רשימת כל המשחקים הזמינים
+     */
     public void setAllGames(List<String> games) {
         m_AllGames.clear();
         if (games != null) m_AllGames.addAll(games);
         notifyDataSetChanged();
     }
 
+    /**
+     * Updates the set of currently selected (favorite) games / עדכון קבוצת המשחקים שנבחרו כמועדפים
+     */
     public void setSelectedGames(List<String> selected) {
         m_Selected.clear();
         if (selected != null) m_Selected.addAll(selected);
@@ -42,17 +51,23 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.VH> {
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Uses item_game_checkbox.xml which should use 'start'/'end' for RTL support
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_game_checkbox, parent, false);
         return new VH(v);
     }
 
+    /**
+     * Method: onBindViewHolder
+     * Changes: Ensures the checkbox text is set dynamically from the database
+     */
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         String game = m_AllGames.get(position);
 
+        // Reset listener before setting state to avoid trigger during binding
         holder.cb.setOnCheckedChangeListener(null);
-        holder.cb.setText(game);
+        holder.cb.setText(game); // Game names are dynamic from Firestore
         holder.cb.setChecked(m_Selected.contains(game));
 
         holder.cb.setOnCheckedChangeListener((btn, isChecked) -> {

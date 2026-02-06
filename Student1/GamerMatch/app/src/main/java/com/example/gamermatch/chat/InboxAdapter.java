@@ -1,5 +1,6 @@
 package com.example.gamermatch.chat;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,123 +10,105 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamermatch.R;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ChatVH> {
 
     public interface OnChatClickListener {
-        // הוספנו isGroup + title כדי ש-InboxActivity יוכל לפתוח נכון
         void onChatClick(String chatId, boolean isGroup, String title, String otherUid);
     }
 
-    private final List<Chat> chats = new ArrayList<>();
-    private final String currentUid;
-    private final OnChatClickListener listener;
+    private final List<Chat> m_Chats = new ArrayList<>();
+    private final String m_CurrentUid;
+    private final OnChatClickListener m_Listener;
 
-    public InboxAdapter(String currentUid, OnChatClickListener listener) {
-        this.currentUid = currentUid;
-        this.listener = listener;
+    public InboxAdapter(String i_CurrentUid, OnChatClickListener i_Listener) {
+        this.m_CurrentUid = i_CurrentUid;
+        this.m_Listener = i_Listener;
     }
 
-    public void setChats(List<Chat> newChats) {
-        chats.clear();
-        if (newChats != null) chats.addAll(newChats);
+    public void setChats(List<Chat> i_NewChats) {
+        m_Chats.clear();
+        if (i_NewChats != null) m_Chats.addAll(i_NewChats);
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public ChatVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_row, parent, false);
-        return new ChatVH(v);
+    public ChatVH onCreateViewHolder(@NonNull ViewGroup i_Parent, int i_ViewType) {
+        View v_View = LayoutInflater.from(i_Parent.getContext()).inflate(R.layout.item_chat_row, i_Parent, false);
+        return new ChatVH(v_View);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChatVH holder, int position) {
-        Chat c = chats.get(position);
+        Chat v_Chat = m_Chats.get(position);
+        Context context = holder.itemView.getContext();
+        boolean v_IsGroup = "game_group".equalsIgnoreCase(v_Chat.getType());
 
-        boolean isGroup = "game_group".equalsIgnoreCase(c.getType());
-
-        // 1) Title
-        if (isGroup) {
-            String title = c.getGameName() != null ? c.getGameName() : "Game Group";
-            holder.tvTitle.setText(title);
+        // 1) Title logic with Localization
+        if (v_IsGroup) {
+            String v_Title = v_Chat.getGameName() != null ? v_Chat.getGameName() : context.getString(R.string.game_group_default_title);
+            holder.tvTitle.setText(v_Title);
         } else {
-            // DM: מציגים שם של המשתמש השני
-            String otherUid = extractOtherUid(c);
-            if (otherUid == null) {
-                holder.tvTitle.setText("Chat");
+            String v_OtherName;
+
+            // Logic to pick the correct display name
+            if (v_Chat.getSenderId() != null && v_Chat.getSenderId().equals(m_CurrentUid)) {
+                v_OtherName = v_Chat.getReceiverName();
             } else {
-                String finalOtherUid = otherUid;
-                FirebaseFirestore.getInstance()
-                        .collection("users")
-                        .document(otherUid)
-                        .get()
-                        .addOnSuccessListener(doc -> {
-                            String name = doc.getString("name");
-                            holder.tvTitle.setText(name != null ? name : finalOtherUid);
-                        })
-                        .addOnFailureListener(e -> holder.tvTitle.setText(finalOtherUid));
+                v_OtherName = v_Chat.getSenderName();
             }
+
+            // Use localized "Chat with %s" format
+            String finalDisplayName = v_OtherName != null ? v_OtherName : context.getString(R.string.player_name_placeholder);
+            holder.tvTitle.setText(context.getString(R.string.chat_with_prefix, finalDisplayName));
         }
 
-        // 2) Last message
-        holder.tvLast.setText(c.getLastMessage() != null ? c.getLastMessage() : "");
+        // 2) Last message logic with Localization
+        holder.tvLast.setText(v_Chat.getLastMessage() != null && !v_Chat.getLastMessage().isEmpty()
+                ? v_Chat.getLastMessage()
+                : context.getString(R.string.chat_last_message_placeholder));
 
-        // 3) Click
+        // 3) Click listener
         holder.itemView.setOnClickListener(v -> {
-            if (listener == null) return;
+            if (m_Listener == null) return;
 
-            if (isGroup) {
-                // בקבוצה: chatId הוא docId קבוע כמו "game_fifa"
-                // חשוב: לא לחשב מחדש באמצעות ChatUtils
-                String title = c.getGameName() != null ? c.getGameName() : "Game Group";
-                // כאן אין otherUid
-                listener.onChatClick(getChatIdByPosition(position), true, title, null);
+            if (v_IsGroup) {
+                String v_ChatId = getChatIdByPosition(position);
+                String v_Title = v_Chat.getGameName() != null ? v_Chat.getGameName() : context.getString(R.string.game_group_default_title);
+                m_Listener.onChatClick(v_ChatId, true, v_Title, null);
             } else {
-                String otherUid = extractOtherUid(c);
-                if (otherUid == null) return;
-
-                String chatId = ChatUtils.chatId(currentUid, otherUid);
-                listener.onChatClick(chatId, false, null, otherUid);
+                String v_OtherUid = extractOtherUid(v_Chat);
+                if (v_OtherUid == null) return;
+                String v_ChatId = ChatUtils.chatId(m_CurrentUid, v_OtherUid);
+                m_Listener.onChatClick(v_ChatId, false, null, v_OtherUid);
             }
         });
     }
 
-    // אצלך ה-chatId הוא ה-DocumentId (כמו "uid_uid" או "game_fifa")
-    // אבל snapshot.toObjects(Chat.class) לא מביא את ה-id עצמו.
-    // לכן כאן אנחנו מניחים שב-InboxActivity לא צריך את ה-id מהאובייקט,
-    // וב-DM מחשבים עם ChatUtils, וב-Group אנחנו חייבים שה-id יהיה "game_key".
-    // כדי שה-Group ייפתח נכון מהרשימה, הכי פשוט: לקבוע שה-chatId של group הוא "game_<gameKey>"
-    // ואז אנחנו יכולים לשחזר אותו כאן.
-    private String getChatIdByPosition(int position) {
-        Chat c = chats.get(position);
-        if ("game_group".equalsIgnoreCase(c.getType())) {
-            String key = c.getGameKey();
-            if (key == null && c.getGameName() != null) {
-                key = c.getGameName().toLowerCase().replaceAll("[^a-z0-9]", "");
-            }
-            return "game_" + (key != null ? key : "group");
+    private String getChatIdByPosition(int i_Position) {
+        Chat v_Chat = m_Chats.get(i_Position);
+        if ("game_group".equalsIgnoreCase(v_Chat.getType())) {
+            String v_Key = v_Chat.getGameKey();
+            return "game_" + (v_Key != null ? v_Key : "group");
         }
-        // DM fallback
-        String otherUid = extractOtherUid(c);
-        return otherUid != null ? ChatUtils.chatId(currentUid, otherUid) : "";
+        String v_OtherUid = extractOtherUid(v_Chat);
+        return v_OtherUid != null ? ChatUtils.chatId(m_CurrentUid, v_OtherUid) : "";
     }
 
-    private String extractOtherUid(Chat c) {
-        if (c.getParticipants() == null) return null;
-        for (String uid : c.getParticipants()) {
-            if (uid != null && !uid.equals(currentUid)) return uid;
+    private String extractOtherUid(Chat i_Chat) {
+        if (i_Chat.getParticipants() == null) return null;
+        for (String v_Uid : i_Chat.getParticipants()) {
+            if (v_Uid != null && !v_Uid.equals(m_CurrentUid)) return v_Uid;
         }
         return null;
     }
 
     @Override
     public int getItemCount() {
-        return chats.size();
+        return m_Chats.size();
     }
 
     static class ChatVH extends RecyclerView.ViewHolder {

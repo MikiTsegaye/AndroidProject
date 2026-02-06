@@ -1,10 +1,13 @@
 package com.example.gamermatch;
 
 import com.google.firebase.firestore.PropertyName;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User Data Model / מודל נתונים למשתמש
+ * Represents a registered gamer in the system
+ */
 public class User {
     private String userId;
     private String name;
@@ -12,9 +15,12 @@ public class User {
     private List<String> m_FavoriteGames;
     private List<String> m_FriendsList;
 
+    /**
+     * Mandatory empty constructor for Firestore / קונסטרקטור ריק חובה עבור פיירבייס
+     */
     public User() {
-        //empty for firebase
-        }
+        // Empty constructor for Firebase
+    }
 
     public User(String i_UserId, String i_Name, String i_Email) {
         this.userId = i_UserId;
@@ -24,9 +30,11 @@ public class User {
         this.m_FriendsList = new ArrayList<>();
     }
 
-    //  אנו אומרים לפיירבייס בדיוק איזה שדה לחפש
+    // --- Getters & Setters with Firestore Mapping ---
+
     @PropertyName("userId")
     public String getUserId() { return userId; }
+
     @PropertyName("userId")
     public void setUserId(String userId) { this.userId = userId; }
 
@@ -35,12 +43,16 @@ public class User {
 
     @PropertyName("name")
     public void setName(String name) { this.name = name; }
-    @PropertyName("email")
-    public void setEmail(String email) { this.email = email; }
+
     @PropertyName("email")
     public String getEmail() { return email; }
+
+    @PropertyName("email")
+    public void setEmail(String email) { this.email = email; }
+
     @PropertyName("favoriteGames")
     public List<String> getFavoriteGames() { return m_FavoriteGames; }
+
     @PropertyName("favoriteGames")
     public void setFavoriteGames(List<String> games) { this.m_FavoriteGames = games; }
 
@@ -49,5 +61,4 @@ public class User {
 
     @PropertyName("friends")
     public void setFriendsList(List<String> friends) { this.m_FriendsList = friends; }
-
 }

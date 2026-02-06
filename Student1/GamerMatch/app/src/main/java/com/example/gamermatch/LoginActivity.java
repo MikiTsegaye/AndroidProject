@@ -7,7 +7,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.Navigation;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity
@@ -25,14 +24,6 @@ public class LoginActivity extends AppCompatActivity
         setContentView(R.layout.activity_login);
 
         m_Auth = FirebaseAuth.getInstance();
-
-//        //if the user already connenct to upp
-//        if (m_Auth.getCurrentUser() != null) {
-//            startActivity(new Intent(this, com.example.gamermatch.chat.InboxActivity.class));
-//            finish();
-//            return;
-//        }
-
 
         m_EtEmail = findViewById(R.id.etLoginEmail);
         m_EtPassword = findViewById(R.id.etLoginPassword);
@@ -57,19 +48,26 @@ public class LoginActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * פונקציה: validateFields
+     * שינויים: שימוש ב-getString עבור הודעת מילוי שדות
+     */
     private boolean validateFields(String i_Email, String i_Password)
     {
-        boolean v_IsInputValid = true;
-
         if (i_Email.isEmpty() || i_Password.isEmpty())
         {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-            v_IsInputValid = false;
+            // מומלץ להוסיף string ייעודי ב-XML עבור "Please fill all fields"
+            Toast.makeText(this, getString(R.string.not_logged_in), Toast.LENGTH_SHORT).show();
+            return false;
         }
 
-        return v_IsInputValid;
+        return true;
     }
 
+    /**
+     * פונקציה: signIn
+     * שינויים: לוקאליזציה של הודעות הצלחה ושגיאה
+     */
     private void signIn(String i_Email, String i_Password)
     {
         m_Auth.signInWithEmailAndPassword(i_Email, i_Password)
@@ -77,18 +75,16 @@ public class LoginActivity extends AppCompatActivity
                 {
                     if (task.isSuccessful())
                     {
-                        Toast.makeText(this, "Welcome Back!", Toast.LENGTH_SHORT).show();
+                        // שימוש במחרוזת ברוכים הבאים מה-XML
+                        Toast.makeText(this, getString(R.string.welcome_title), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-                        //just for check and then delete?
-                        Intent i = new Intent(LoginActivity.this, com.example.gamermatch.chat.InboxActivity.class);
-
                         startActivity(intent);
                         finish();
                     }
                     else
                     {
-                        Toast.makeText(this, "Login failed: Check credentials", Toast.LENGTH_SHORT).show();
+                        // לוקאליזציה של שגיאת התחברות
+                        Toast.makeText(this, getString(R.string.not_logged_in), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

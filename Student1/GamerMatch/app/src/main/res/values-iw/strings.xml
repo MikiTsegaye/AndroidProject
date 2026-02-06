@@ -18,9 +18,9 @@
     <!-- activity_edit_profile -->
     <string name="account_settings_title">הגדרות חשבון ⚙️</string>
     <string name="new_username_hint">שם משתמש חדש</string>
-    <string name="save_name">עדכן שם ✨</string>
-    <string name="favorite_games_title">בחרי משחקים מועדפים:</string>
-    <string name="favorite_games_hint">סמני כדי להוסיף / בטלי סימון כדי להסיר</string>
+    <string name="save_name">עדכון שם ✨</string>
+    <string name="favorite_games_title">בחר/י משחקים מועדפים:</string>
+    <string name="favorite_games_hint">סמנ/י כדי להוסיף / בטל/י סימון כדי להסיר</string>
     <string name="no_games">אין משחקים להצגה כרגע</string>
     <string name="back_to_main">חזרה למסך הראשי 🏠</string>
 
@@ -29,7 +29,7 @@
     <string name="email_hint">אימייל</string>
     <string name="password_hint">סיסמה</string>
     <string name="login_button">התחבר</string>
-    <string name="go_to_register">אין לך חשבון? להרשמה לחצי כאן</string>
+    <string name="go_to_register">אין לך חשבון? להרשמה לחצ/י כאן</string>
 
     <!-- activity_main -->
     <string name="welcome_title">ברוכים הבאים ל־Gamer Match!</string>
@@ -63,5 +63,15 @@
     <string name="add_friend_symbol">➕</string>
     <string name="message_button">הודעה</string>
     <string name="remove_friend_symbol">❌</string>
+
+    <string name="added_to_friends">נוסף לחברים! 🎮</string>
+    <string name="error_adding_friend">שגיאה בהוספת חבר</string>
+    <string name="removed_from_friends">הוסר מהחברים!</string>
+    <string name="error_removing_friend">שגיאה בהסרת חבר</string>
+    <string name="profile_updated">הפרופיל עודכן בהצלחה! ✅</string>
+    <string name="enter_valid_name">נא להזין שם תקין</string>
+    <string name="choose_game_prompt">בחר/י משחק…</string>
+    <string name="selected_prefix">נבחר: %s</string>
+    <string name="chat_with_prefix">%s</string>
 
 </resources>

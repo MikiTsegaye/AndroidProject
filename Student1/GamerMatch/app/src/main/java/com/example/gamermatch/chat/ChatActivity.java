@@ -160,7 +160,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String text) {
-        // message doc
+        // 1. יצירת ההודעה
         Map<String, Object> msg = new HashMap<>();
         msg.put("senderId", currentUid);
         msg.put("text", text);
@@ -170,21 +170,35 @@ public class ChatActivity extends AppCompatActivity {
                 .collection("messages")
                 .add(msg);
 
-        // conversation summary update
-        Map<String, Object> chatUpdate = new HashMap<>();
+        // 2. עדכון סיכום הצ'אט (Inbox) עם שמות למניעת ANR
+        final Map<String, Object> chatUpdate = new HashMap<>();
         chatUpdate.put("lastMessage", text);
         chatUpdate.put("lastSenderId", currentUid);
         chatUpdate.put("lastTimestamp", FieldValue.serverTimestamp());
 
-        // חשוב: ב-DM אנחנו עדיין שומרים participants של 2 אנשים
-        // בקבוצה - לא נוגעים ב-participants כדי לא לדרוס!
         if (!isGroup) {
             chatUpdate.put("type", "dm");
             chatUpdate.put("participants", java.util.Arrays.asList(currentUid, otherUid));
-        }
 
-        db.collection("chats").document(chatId)
-                .set(chatUpdate, com.google.firebase.firestore.SetOptions.merge());
+            // משיכת השמות מה-Database ושמירתם בתוך אובייקט הצ'אט
+            db.collection("users").document(currentUid).get().addOnSuccessListener(me -> {
+                String myName = me.getString("name");
+                chatUpdate.put("senderName", myName != null ? myName : "Gamer");
+
+                db.collection("users").document(otherUid).get().addOnSuccessListener(other -> {
+                    String otherName = other.getString("name");
+                    chatUpdate.put("receiverName", otherName != null ? otherName : "Gamer");
+
+                    // שמירה סופית של הצ'אט עם השמות
+                    db.collection("chats").document(chatId)
+                            .set(chatUpdate, com.google.firebase.firestore.SetOptions.merge());
+                });
+            });
+        } else {
+            // בקבוצה אין צורך בשמות פרטיים
+            db.collection("chats").document(chatId)
+                    .set(chatUpdate, com.google.firebase.firestore.SetOptions.merge());
+        }
     }
 
     @Override

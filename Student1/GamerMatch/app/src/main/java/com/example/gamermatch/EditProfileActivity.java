@@ -113,10 +113,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if (!newName.isEmpty()) {
             m_FirebaseHelper.UpdateName(newName);
-            Toast.makeText(this, "הפרופיל עודכן בהצלחה! ✅", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.profile_updated), Toast.LENGTH_SHORT).show();
             finish();
         } else {
-            Toast.makeText(this, "נא להזין שם תקין", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.enter_valid_name), Toast.LENGTH_SHORT).show();
         }
     }
 }

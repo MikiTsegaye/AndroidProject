@@ -46,7 +46,7 @@ public class InboxActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Chats");
+            getSupportActionBar().setTitle(getString(R.string.chats_title));
         }
         toolbar.setNavigationOnClickListener(v -> finish());
 
@@ -59,7 +59,7 @@ public class InboxActivity extends AppCompatActivity {
         currentUid = FirebaseAuth.getInstance().getUid();
 
         if (currentUid == null) {
-            tvEmpty.setText("Not logged in");
+            tvEmpty.setText(getString(R.string.not_logged_in));
             tvEmpty.setVisibility(View.VISIBLE);
             rvChats.setVisibility(View.GONE);
             return;
@@ -113,9 +113,9 @@ public class InboxActivity extends AppCompatActivity {
 
                     if (games == null || games.isEmpty()) {
                         new AlertDialog.Builder(this)
-                                .setTitle("אין משחקים")
-                                .setMessage("קודם תבחרי משחקים בפרופיל כדי להצטרף לקבוצה.")
-                                .setPositiveButton("סבבה", null)
+                                .setTitle(getString(R.string.no_games))
+                                .setMessage(getString(R.string.favorite_games_hint))
+                                .setPositiveButton(android.R.string.ok, null)
                                 .show();
                         return;
                     }
@@ -123,9 +123,9 @@ public class InboxActivity extends AppCompatActivity {
                     String[] arr = games.toArray(new String[0]);
 
                     new AlertDialog.Builder(this)
-                            .setTitle("הצטרפות לקבוצת משחק")
+                            .setTitle(getString(R.string.join_game_group))
                             .setItems(arr, (d, which) -> joinGameGroupAndOpen(arr[which]))
-                            .setNegativeButton("ביטול", null)
+                            .setNegativeButton(android.R.string.cancel, null)
                             .show();
                 });
     }
@@ -171,6 +171,7 @@ public class InboxActivity extends AppCompatActivity {
                     adapter.setChats(chats);
 
                     boolean empty = (chats == null || chats.isEmpty());
+                    if(empty) tvEmpty.setText(getString(R.string.no_chats_yet));
                     tvEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
                     rvChats.setVisibility(empty ? View.GONE : View.VISIBLE);
                 });

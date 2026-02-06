@@ -69,7 +69,7 @@ public class SearchFragment extends Fragment {
     private void setupGamesSpinner() {
         // שורה ראשונה שתכריח לבחור
         m_AllGames.clear();
-        m_AllGames.add("בחר משחק...");
+        m_AllGames.add(getString(R.string.choose_game_prompt));
 
         m_GamesSpinnerAdapter = new ArrayAdapter<>(
                 requireContext(),
@@ -84,13 +84,13 @@ public class SearchFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = m_AllGames.get(position);
 
-                if ("בחר משחק...".equals(selected)) {
+                if (getString(R.string.choose_game_prompt).equals(selected)) {
                     m_TvSelectedGame.setText("");
                     clearResults();
                     return;
                 }
 
-                m_TvSelectedGame.setText("נבחר: " + selected);
+                m_TvSelectedGame.setText(getString(R.string.selected_prefix,selected));
                 performSearch(selected);
             }
 
@@ -109,7 +109,7 @@ public class SearchFragment extends Fragment {
                 .addOnSuccessListener(snap -> {
                     // נשאיר את "בחרי משחק..." במקום 0
                     m_AllGames.clear();
-                    m_AllGames.add("בחר משחק...");
+                    m_AllGames.add(getString(R.string.choose_game_prompt));
 
                     for (DocumentSnapshot doc : snap.getDocuments()) {
                         String name = doc.getString("name");
@@ -118,7 +118,7 @@ public class SearchFragment extends Fragment {
                     m_GamesSpinnerAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "שגיאה בטעינת משחקים", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(getContext(), getString(R.string.no_games), Toast.LENGTH_SHORT).show()
                 );
     }
 
@@ -155,7 +155,7 @@ public class SearchFragment extends Fragment {
                         }
 
                     } else {
-                        Toast.makeText(getContext(), "שגיאה בחיפוש הנתונים", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.no_players_found), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
