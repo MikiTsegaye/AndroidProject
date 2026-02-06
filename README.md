@@ -9,7 +9,7 @@ GamerMatch is a social Android application designed for gamers to find teammates
 
 | Inbox | Search | Profile |
 | :---: | :---: | :---: |
-| ![Inbox](screenshots/chat.png) | ![Search](screenshots/friendsearch.png) | ![Profile](screenshots/profile.png) |
+| ![Inbox](screenshots/chats.png) | ![Search](screenshots/friendsearch.png) | ![Profile](screenshots/profile.png) |
 
 ---
 
@@ -41,4 +41,5 @@ GamerMatch is a social Android application designed for gamers to find teammates
 Developed by a team of three Computer Science students. My primary contributions included:
 * Developing the real-time **Chat and Inbox system**.
 * Implementing **Localization** across the entire UI for HE/EN support.
+
 * Managing the **Firebase integration** and database security rules.
