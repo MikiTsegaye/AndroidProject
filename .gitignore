@@ -3,6 +3,7 @@
 build/
 app/build/
 captures/
+*.idea
 
 # Android Studio files
 *.iml
@@ -31,4 +32,5 @@ out/
 
 # Firebase configuration (Sensitive Data)
 # אבטחת מפתחות הגישה של הפרויקט שלך
+
 google-services.json
