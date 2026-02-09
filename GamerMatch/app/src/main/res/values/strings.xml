@@ -65,6 +65,8 @@
     <string name="remove_friend_symbol">❌</string>
 
     <string name="added_to_friends">Added to friends! 🎮</string>
+    <string name="saved">Saved!</string>
+    <string name="removed">Removed!</string>
     <string name="error_adding_friend">Error adding friend</string>
     <string name="removed_from_friends">Removed from friends!</string>
     <string name="error_removing_friend">Error removing friend</string>

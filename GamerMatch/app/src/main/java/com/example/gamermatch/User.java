@@ -15,9 +15,7 @@ public class User {
     private List<String> m_FavoriteGames;
     private List<String> m_FriendsList;
 
-    /**
-     * Mandatory empty constructor for Firestore / קונסטרקטור ריק חובה עבור פיירבייס
-     */
+
     public User() {
         // Empty constructor for Firebase
     }

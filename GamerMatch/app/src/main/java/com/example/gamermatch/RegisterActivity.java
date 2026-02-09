@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * Register Activity / מסך הרשמה
+ * Register Activity
  * Supports localization for English and Hebrew.
  */
 public class RegisterActivity extends AppCompatActivity
@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity
             String password = m_EtPassword.getText().toString().trim();
 
             if (validateInput(name, email, password)) {
-                // מציגים הודעת המתנה במידת הצורך
+                // Showing a wait alert if needed.
                 m_BtnRegister.setEnabled(false);
 
                 m_FirebaseHelper.RegisterNewUser(email, password, name, (success, error) -> {

@@ -1,7 +1,5 @@
 package com.example.gamermatch;
 
-import android.util.Log;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Helper class for Firebase operations / מחלקת עזר לפעולות פיירבייס
+ * Helper class for Firebase operations
  */
 public class FireBaseHelper {
 
@@ -19,14 +17,14 @@ public class FireBaseHelper {
     private final FirebaseFirestore m_DataBase = FirebaseFirestore.getInstance();
 
     /**
-     * Get Current User ID / קבלת מזהה המשתמש המחובר
+     * Get Current User ID
      */
     public String GetCurrentUserId() {
         return (m_Auth.getCurrentUser() != null) ? m_Auth.getCurrentUser().getUid() : null;
     }
 
     /**
-     * Register New User / הרשמת משתמש חדש
+     * Register New User
      * Updated to ensure the provided name is saved correctly to the database.
      */
     public void RegisterNewUser(String i_Email, String i_Password, String i_Name, OnRegistrationCompleteListener listener) {
@@ -46,7 +44,7 @@ public class FireBaseHelper {
                         userMap.put("favoriteGames", new ArrayList<String>());
                         userMap.put("friends", new ArrayList<String>());
 
-                        // שימוש ב-set מבטיח יצירת מסמך חדש
+                        // Set used to make sure every document is new
                         m_DataBase.collection("users").document(v_UserId).set(userMap)
                                 .addOnCompleteListener(dbTask -> {
                                     if (dbTask.isSuccessful()) {
@@ -64,7 +62,7 @@ public class FireBaseHelper {
         void onResult(boolean success, String errorMessage);
     }
     /**
-     * Search Players by Game / חיפוש שחקנים לפי משחק
+     * Search Players by Game
      */
     public Query SearchPlayersByGame(String i_GameName) {
         return m_DataBase.collection("users")
@@ -72,7 +70,7 @@ public class FireBaseHelper {
     }
 
     /**
-     * Update User Name / עדכון שם משתמש
+     * Update User Name
      */
     public void UpdateName(String i_NewName) {
         String v_Uid = GetCurrentUserId();
@@ -83,7 +81,7 @@ public class FireBaseHelper {
     }
 
     /**
-     * Add Game to Favorites / הוספת משחק למועדפים
+     * Add Game to Favorites
      */
     public void AddFavoriteGame(String i_GameName) {
         String v_Uid = GetCurrentUserId();
@@ -94,7 +92,7 @@ public class FireBaseHelper {
     }
 
     /**
-     * Remove Game from Favorites / הסרת משחק מהמועדפים
+     * Remove Game from Favorites
      */
     public void RemoveFavoriteGame(String i_GameName) {
         String v_Uid = GetCurrentUserId();
@@ -105,7 +103,7 @@ public class FireBaseHelper {
     }
 
     /**
-     * Add Friend / הוספת חבר
+     * Add Friend
      */
     public void AddFriend(String i_FriendUid) {
         String v_Uid = GetCurrentUserId();
@@ -116,7 +114,7 @@ public class FireBaseHelper {
     }
 
     /**
-     * Remove Friend / הסרת חבר
+     * Remove Friend
      */
     public void RemoveFriend(String i_FriendUid) {
         String v_Uid = GetCurrentUserId();

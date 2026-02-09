@@ -43,7 +43,6 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
     @Override
     public void onBindViewHolder(@NonNull PlayerViewHolder holder, int position) {
 
-        // 1. קודם כל מביאים את המשתמש
         User user = m_PlayerList.get(position);
         Context context = holder.itemView.getContext();
 
@@ -55,9 +54,9 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
         // אנחנו בודקים אם יש רשימה, ואם כן - מחברים אותה למשפט עם פסיקים
         if (user.getFavoriteGames() != null && !user.getFavoriteGames().isEmpty()) {
             String gamesString = android.text.TextUtils.join(", ", user.getFavoriteGames());
-            holder.m_TvGames.setText("Games: " + gamesString);
+            holder.m_TvGames.setText(context.getString(R.string.player_games_prefix) + gamesString);
         } else {
-            holder.m_TvGames.setText("Games: None");
+            holder.m_TvGames.setText(context.getString(R.string.player_games_prefix) +" :None");
         }
 
         // בתוך onBindViewHolder
@@ -77,11 +76,12 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
                     .document(v_CurrentUid)
                     .update("friends", FieldValue.arrayUnion(v_OtherUid))
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(context, "Added to friends! 🎮", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getString(R.string.added_to_friends), Toast.LENGTH_SHORT).show();
 
                         // עדכון ויזואלי מיידי למשתמש
                         holder.m_BtnAddFriend.setEnabled(false);
-                        holder.m_BtnAddFriend.setText("Saved");
+                        holder.m_BtnAddFriend.setText(context.getString(R.string.saved));
+
 
                         // אם קיים כפתור הסרה, נפעיל אותו כעת
                         if (holder.m_BtnRemoveFriend != null)
@@ -91,7 +91,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(context, "Error adding friend", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,context.getString(R.string.error_adding_friend), Toast.LENGTH_SHORT).show();
                     });
         });
         holder.m_BtnRemoveFriend.setOnClickListener(v -> {
@@ -107,16 +107,16 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
                     .document(currentUid)
                     .update("friends", FieldValue.arrayRemove(otherUid))
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(context, "Removed from friends! ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getString(R.string.removed_from_friends), Toast.LENGTH_SHORT).show();
 
                         // עדכון ויזואלי: מאפשרים להוסיף שוב או משנים את הטקסט
                         holder.m_BtnRemoveFriend.setEnabled(false);
-                        holder.m_BtnRemoveFriend.setText("Removed");
+                        holder.m_BtnRemoveFriend.setText(context.getString(R.string.removed));
                         holder.m_BtnAddFriend.setEnabled(true);
                         holder.m_BtnAddFriend.setText("➕");
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(context, "Error removing friend", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getString(R.string.error_removing_friend), Toast.LENGTH_SHORT).show();
                     });
         });
         // 2. עכשיו הכפתור יעבוד כי הוא מכיר את ה-user

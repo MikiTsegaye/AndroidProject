@@ -11,12 +11,11 @@ import com.example.gamermatch.search.SearchActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * Main Activity / המסך הראשי
+ * Main Activity
  * Handles navigation to all major app features
  */
 public class MainActivity extends AppCompatActivity
 {
-    private TextView m_TvYourId;
     private Button m_BtnEditProfile;
     private FirebaseAuth m_Auth;
     private Button m_BtnSearch;
@@ -29,31 +28,30 @@ public class MainActivity extends AppCompatActivity
 
         m_Auth = FirebaseAuth.getInstance();
 
-        // Views - ודאי שב-activity_main.xml הם מקושרים ל-strings.xml
         m_BtnEditProfile = findViewById(R.id.btnGoToEditProfile);
         m_BtnSearch = findViewById(R.id.btnGoToSearch);
         Button btnMyFriends = findViewById(R.id.btnMyFriends);
 
-        // ניווט לעריכת פרופיל
+        // Navigation to my profile.
         m_BtnEditProfile.setOnClickListener(v ->
         {
             Intent intent = new Intent(this, EditProfileActivity.class);
             startActivity(intent);
         });
 
-        // ניווט לתיבת ההודעות (Inbox)
+        // Navigation to inbox.
         findViewById(R.id.btnGoToChat).setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, com.example.gamermatch.chat.InboxActivity.class));
         });
 
-        // ניווט לחיפוש שחקנים
+        // Navigation to search.
         m_BtnSearch.setOnClickListener(v ->
         {
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
         });
 
-        // ניווט לרשימת חברים
+        // Navigation to friend list.
         btnMyFriends.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, MyFriendsActivity.class);
             startActivity(intent);

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Adapter for selecting favorite games via checkboxes / אדפטר לבחירת משחקים מועדפים דרך תיבות סימון
+ * Adapter for selecting favorite games via checkboxes
  */
 public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.VH> {
 
@@ -31,7 +31,7 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.VH> {
     }
 
     /**
-     * Updates the list of all available games / עדכון רשימת כל המשחקים הזמינים
+     * Updates the list of all available games
      */
     public void setAllGames(List<String> games) {
         m_AllGames.clear();
@@ -40,7 +40,7 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.VH> {
     }
 
     /**
-     * Updates the set of currently selected (favorite) games / עדכון קבוצת המשחקים שנבחרו כמועדפים
+     * Updates the set of currently selected (favorite) games
      */
     public void setSelectedGames(List<String> selected) {
         m_Selected.clear();
@@ -51,7 +51,6 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.VH> {
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Uses item_game_checkbox.xml which should use 'start'/'end' for RTL support
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_game_checkbox, parent, false);
         return new VH(v);
@@ -83,6 +82,7 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.VH> {
         return m_AllGames.size();
     }
 
+    // ViewHolder instead of typing findViewById() everytime
     static class VH extends RecyclerView.ViewHolder {
         CheckBox cb;
         VH(@NonNull View itemView) {

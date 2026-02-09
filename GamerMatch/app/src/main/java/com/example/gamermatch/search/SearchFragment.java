@@ -33,7 +33,7 @@ public class SearchFragment extends Fragment {
     private RecyclerView m_RvResults;
     private TextView m_TvNoResults;
 
-    // NEW
+    // Combo Box / drop down list
     private Spinner m_SpGames;
     private TextView m_TvSelectedGame;
 
@@ -67,7 +67,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void setupGamesSpinner() {
-        // שורה ראשונה שתכריח לבחור
         m_AllGames.clear();
         m_AllGames.add(getString(R.string.choose_game_prompt));
 
@@ -102,12 +101,10 @@ public class SearchFragment extends Fragment {
     private void loadGamesFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // אם אין לך nameLower בכולם, תגידי לי ונשנה ל-orderBy("name") או בלי orderBy
         db.collection("games")
                 .orderBy("nameLower")
                 .get()
                 .addOnSuccessListener(snap -> {
-                    // נשאיר את "בחרי משחק..." במקום 0
                     m_AllGames.clear();
                     m_AllGames.add(getString(R.string.choose_game_prompt));
 
@@ -121,7 +118,7 @@ public class SearchFragment extends Fragment {
                         Toast.makeText(getContext(), getString(R.string.no_games), Toast.LENGTH_SHORT).show()
                 );
     }
-
+    //Search friends by games
     private void performSearch(String i_GameName) {
         String v_CurrentUserId = m_FirebaseHelper.GetCurrentUserId();
 
@@ -133,8 +130,6 @@ public class SearchFragment extends Fragment {
                         for (DocumentSnapshot v_Doc : i_Task.getResult()) {
                             User v_User = v_Doc.toObject(User.class);
                             if (v_User != null) {
-                                // הגנה: אם getUserId() אצלך לא נטען מה-doc id
-                                // אפשר גם: v_UserId = v_Doc.getId();
                                 String uid = v_User.getUserId();
                                 if (uid == null) uid = v_Doc.getId();
 
