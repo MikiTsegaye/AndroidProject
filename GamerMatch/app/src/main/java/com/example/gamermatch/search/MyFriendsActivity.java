@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamermatch.R;
 import com.example.gamermatch.User;
-import com.example.gamermatch.search.PlayersAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -45,7 +44,6 @@ public class MyFriendsActivity extends AppCompatActivity {
                 .get().addOnSuccessListener(document -> {
                     List<String> friendsIds = (List<String>) document.get("friends");
                     if (friendsIds != null && !friendsIds.isEmpty()) {
-                        // משיכת פרטי המשתמשים עבור כל ה-IDs ברשימה
                         FirebaseFirestore.getInstance().collection("users")
                                 .whereIn("userId", friendsIds)
                                 .get().addOnSuccessListener(querySnapshot -> {

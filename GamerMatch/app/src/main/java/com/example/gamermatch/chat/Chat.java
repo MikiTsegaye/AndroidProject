@@ -9,16 +9,11 @@ public class Chat {
     private String lastSenderId;
     private Timestamp lastTimestamp;
 
-    // שדות עבור קבוצות משחק
-    private String type;      // "dm" או "game_group"
-    private String gameName;  // למשל: "FIFA"
-    private String gameKey;   // למשל: "fifa"
-
-    // שדות חדשים למניעת ANR וקריסות ב-Inbox
-    private String senderName;    // שם שולח ההודעה האחרונה
-    private String receiverName;  // שם מקבל ההודעה (רלוונטי ל-DM)
-
-    // קונסטרקטור ריק חובה עבור Firebase Firestore
+    private String type;
+    private String gameName;
+    private String gameKey;
+    private String senderName;
+    private String receiverName;
     public Chat() {}
 
     public Chat(List<String> participants, String lastMessage, String lastSenderId, Timestamp lastTimestamp) {
@@ -28,7 +23,6 @@ public class Chat {
         this.lastTimestamp = lastTimestamp;
     }
 
-    // גטרים (Getters) וסטרים (Setters) בסיסיים
     public List<String> getParticipants() {
         return participants;
     }
@@ -85,7 +79,6 @@ public class Chat {
         this.gameKey = gameKey;
     }
 
-    // גטרים וסטרים עבור השמות (לשימוש ה-InboxAdapter)
     public String getSenderName() {
         return senderName;
     }
@@ -102,7 +95,6 @@ public class Chat {
         this.receiverName = receiverName;
     }
 
-    // מתודה נוספת שהאדפטר מחפש כדי לזהות את השולח האחרון
     public String getSenderId() {
         return lastSenderId;
     }

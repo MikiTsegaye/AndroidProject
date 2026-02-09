@@ -51,7 +51,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
         } else {
             holder.m_TvName.setText("Unknown");
         }
-        // אנחנו בודקים אם יש רשימה, ואם כן - מחברים אותה למשפט עם פסיקים
+
         if (user.getFavoriteGames() != null && !user.getFavoriteGames().isEmpty()) {
             String gamesString = android.text.TextUtils.join(", ", user.getFavoriteGames());
             holder.m_TvGames.setText(context.getString(R.string.player_games_prefix) + gamesString);
@@ -59,18 +59,17 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
             holder.m_TvGames.setText(context.getString(R.string.player_games_prefix) +" :None");
         }
 
-        // בתוך onBindViewHolder
+
         holder.m_BtnAddFriend.setOnClickListener(v -> {
             String v_CurrentUid = FirebaseAuth.getInstance().getUid();
             String v_OtherUid = user.getUserId();
 
-            // בדיקת הגנה - מניעת הוספה של עצמי או נתונים ריקים
             if (v_CurrentUid == null || v_OtherUid == null || v_CurrentUid.equals(v_OtherUid))
             {
                 return;
             }
 
-            // פקודת הקסם של פיירבייס: arrayUnion
+
             FirebaseFirestore.getInstance()
                     .collection("users")
                     .document(v_CurrentUid)
@@ -78,12 +77,9 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(context, context.getString(R.string.added_to_friends), Toast.LENGTH_SHORT).show();
 
-                        // עדכון ויזואלי מיידי למשתמש
                         holder.m_BtnAddFriend.setEnabled(false);
                         holder.m_BtnAddFriend.setText(context.getString(R.string.saved));
 
-
-                        // אם קיים כפתור הסרה, נפעיל אותו כעת
                         if (holder.m_BtnRemoveFriend != null)
                         {
                             holder.m_BtnRemoveFriend.setEnabled(true);
@@ -100,8 +96,6 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
 
             if (currentUid == null || otherUid == null) return;
 
-            // פקודת הקסם להסרה: arrayRemove
-            // זה מסיר את ה-ID מהמערך רק אם הוא קיים שם
             FirebaseFirestore.getInstance()
                     .collection("users")
                     .document(currentUid)
@@ -109,7 +103,6 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(context, context.getString(R.string.removed_from_friends), Toast.LENGTH_SHORT).show();
 
-                        // עדכון ויזואלי: מאפשרים להוסיף שוב או משנים את הטקסט
                         holder.m_BtnRemoveFriend.setEnabled(false);
                         holder.m_BtnRemoveFriend.setText(context.getString(R.string.removed));
                         holder.m_BtnAddFriend.setEnabled(true);
@@ -119,25 +112,16 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.PlayerVi
                         Toast.makeText(context, context.getString(R.string.error_removing_friend), Toast.LENGTH_SHORT).show();
                     });
         });
-        // 2. עכשיו הכפתור יעבוד כי הוא מכיר את ה-user
+
         holder.m_BtnChat.setOnClickListener(v -> {
-
-            // תיקון: משיגים את ה-Context מתוך הכפתור עצמו
-
-
             String currentUid = FirebaseAuth.getInstance().getUid();
-            String otherUid = user.getUserId(); // עכשיו זה יעבוד כי user מוגדר למעלה
+            String otherUid = user.getUserId();
 
-            // הגנה
             if (currentUid == null || otherUid == null || currentUid.equals(otherUid)) {
                 return;
             }
-
-            // יצירת מזהה השיחה
             String chatId = ChatUtils.chatId(currentUid, otherUid);
 
-
-            // מעבר מסך
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("chatId", chatId);
             intent.putExtra("otherUid", otherUid);

@@ -30,7 +30,7 @@ public class ChatActivity extends AppCompatActivity {
     private ListenerRegistration listener;
 
     private String chatId;
-    private String otherUid;   // רק ב-DM
+    private String otherUid;
     private String currentUid;
 
     private boolean isGroup;
@@ -49,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // Intent extras
         chatId = getIntent().getStringExtra("chatId");
-        otherUid = getIntent().getStringExtra("otherUid"); // יכול להיות null בקבוצה
+        otherUid = getIntent().getStringExtra("otherUid");
         isGroup = getIntent().getBooleanExtra("isGroup", false);
         chatTitle = getIntent().getStringExtra("chatTitle");
 
@@ -58,7 +58,7 @@ public class ChatActivity extends AppCompatActivity {
             finish();
             return;
         }
-        // ב-DM חייב otherUid
+
         if (!isGroup && (otherUid == null || otherUid.isEmpty())) {
             finish();
             return;
@@ -80,7 +80,7 @@ public class ChatActivity extends AppCompatActivity {
         }
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Fetch display name (רק ב-DM)
+        // Fetch display name
         if (!isGroup) {
             db.collection("users")
                     .document(otherUid)
@@ -160,7 +160,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String text) {
-        // 1. יצירת ההודעה
         Map<String, Object> msg = new HashMap<>();
         msg.put("senderId", currentUid);
         msg.put("text", text);
@@ -170,7 +169,6 @@ public class ChatActivity extends AppCompatActivity {
                 .collection("messages")
                 .add(msg);
 
-        // 2. עדכון סיכום הצ'אט (Inbox) עם שמות למניעת ANR
         final Map<String, Object> chatUpdate = new HashMap<>();
         chatUpdate.put("lastMessage", text);
         chatUpdate.put("lastSenderId", currentUid);
@@ -180,7 +178,6 @@ public class ChatActivity extends AppCompatActivity {
             chatUpdate.put("type", "dm");
             chatUpdate.put("participants", java.util.Arrays.asList(currentUid, otherUid));
 
-            // משיכת השמות מה-Database ושמירתם בתוך אובייקט הצ'אט
             db.collection("users").document(currentUid).get().addOnSuccessListener(me -> {
                 String myName = me.getString("name");
                 chatUpdate.put("senderName", myName != null ? myName : "Gamer");
@@ -189,13 +186,11 @@ public class ChatActivity extends AppCompatActivity {
                     String otherName = other.getString("name");
                     chatUpdate.put("receiverName", otherName != null ? otherName : "Gamer");
 
-                    // שמירה סופית של הצ'אט עם השמות
                     db.collection("chats").document(chatId)
                             .set(chatUpdate, com.google.firebase.firestore.SetOptions.merge());
                 });
             });
         } else {
-            // בקבוצה אין צורך בשמות פרטיים
             db.collection("chats").document(chatId)
                     .set(chatUpdate, com.google.firebase.firestore.SetOptions.merge());
         }
