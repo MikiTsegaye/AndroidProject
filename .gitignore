@@ -29,7 +29,7 @@ Thumbs.db
 bin/
 gen/
 out/
-
+*.ini
 # Firebase configuration (Sensitive Data)
 # אבטחת מפתחות הגישה של הפרויקט שלך
 
