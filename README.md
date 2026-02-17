@@ -7,9 +7,9 @@ GamerMatch is a social Android application designed for gamers to find teammates
 
 ## 📸 App Preview
 
-| Inbox | Search | Profile |
-| :---: | :---: | :---: |
-| ![Inbox](screenshots/chats.png) | ![Search](screenshots/friendsearch.png) | ![Profile](screenshots/profile.png) |
+|              Login              |             Main              |               Inbox                | Search | Profile |
+|:-------------------------------:|:-----------------------------:|:----------------------------------:| :---: | :---: |
+| ![Login](screenshots/login.png) | ![Main](screenshots/main.png)|   ![Inbox](screenshots/chats.png)  | ![Search](screenshots/friendsearch.png) | ![Profile](screenshots/profile.png) |
 
 ---
 
@@ -18,14 +18,6 @@ GamerMatch is a social Android application designed for gamers to find teammates
 * **Real-time Chat**: Private messaging and game-specific group chats with live synchronization.
 * **Localized Experience**: Full support for English and Hebrew (RTL) devices.
 * **Dynamic Profile**: Manage favorite games and player identity with persistent cloud storage.
-
----
-
-## 🛠 Technical Challenges & Solutions
-* **Real-time Synchronization**: Transitioned from one-time data fetches to `addSnapshotListener` in `InboxActivity` to ensure chat lists update immediately upon returning to the screen.
-* **Data Stability**: Resolved `StringIndexOutOfBoundsException` by implementing length-safety checks in the `InboxAdapter` to handle short messages safely.
-* **Atomic Registration**: Fixed `NOT_FOUND` errors by ensuring user documents are created using `.set()` during registration before any `update()` calls are allowed in Account Settings.
-* **Query Optimization**: Implemented Composite Indexes in Firebase to support complex filtered searches and ordered chat lists.
 
 ---
 
@@ -38,8 +30,9 @@ GamerMatch is a social Android application designed for gamers to find teammates
 ---
 
 ## 👥 Team & Contributions
-Developed by a team of three Computer Science students. My primary contributions included:
-* Developing the real-time **Chat and Inbox system**.
-* Implementing **Localization** across the entire UI for HE/EN support.
+Developed by a team of three Computer Science students.
 
-* Managing the **Firebase integration** and database security rules.
+### Students
+--Michael Tsegaye
+--Roi Baly
+--Lotem Kimchi
