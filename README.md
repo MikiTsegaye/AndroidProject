@@ -34,5 +34,7 @@ Developed by a team of three Computer Science students.
 
 ### Students
 --Michael Tsegaye
+
 --Roi Baly
+
 --Lotem Kimchi
